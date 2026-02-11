@@ -18,18 +18,21 @@ export type Database = {
         Row: {
           created_at: string
           id: number
+          image: string | null
           slug: string
           title: string
         }
         Insert: {
           created_at?: string
           id?: number
+          image?: string | null
           slug: string
           title: string
         }
         Update: {
           created_at?: string
           id?: number
+          image?: string | null
           slug?: string
           title?: string
         }
@@ -104,6 +107,38 @@ export type Database = {
         }
         Relationships: []
       }
+      product_images: {
+        Row: {
+          created_at: string | null
+          id: number
+          is_main: boolean | null
+          product_id: number | null
+          url: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: number
+          is_main?: boolean | null
+          product_id?: number | null
+          url: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: number
+          is_main?: boolean | null
+          product_id?: number | null
+          url?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "product_images_product_id_fkey"
+            columns: ["product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       products: {
         Row: {
           category_id: number
@@ -112,7 +147,7 @@ export type Database = {
           id: number
           image: string | null
           price: number
-          slug: string | null
+          slug: string
           stock: number
           title: string
         }
@@ -123,7 +158,7 @@ export type Database = {
           id?: number
           image?: string | null
           price?: number
-          slug?: string | null
+          slug: string
           stock?: number
           title: string
         }
@@ -134,7 +169,7 @@ export type Database = {
           id?: number
           image?: string | null
           price?: number
-          slug?: string | null
+          slug?: string
           stock?: number
           title?: string
         }
@@ -225,7 +260,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      is_admin: { Args: never; Returns: boolean }
     }
     Enums: {
       [_ in never]: never

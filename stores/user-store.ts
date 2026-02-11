@@ -1,14 +1,12 @@
-import { Profile } from '@/types/user.type';
-import { JwtPayload } from '@supabase/supabase-js'
+import { User } from '@supabase/supabase-js'
 import { createStore } from 'zustand/vanilla'
 
 export type AuthState = {
-  user: JwtPayload | null;
-  profile: Profile | null;
+  user: User | null;
 }
 
 export type AuthActions = {
-  setAuth: (user: JwtPayload | null, profile: Profile | null) => void
+  setAuth: (user: User | null) => void
   clearAuth: () => void
 }
 
@@ -16,7 +14,6 @@ export type AuthStore = AuthState & AuthActions
 
 export const defaultInitState: AuthState = {
   user: null,
-  profile: null,
 }
 
 export const createAuthStore = (
@@ -24,7 +21,7 @@ export const createAuthStore = (
 ) => {
   return createStore<AuthStore>()((set) => ({
     ...initState,
-    setAuth: (user, profile) => set({ user, profile }),
-    clearAuth: () => set({ user: null, profile: null }),
+    setAuth: (user) => set({ user }),
+    clearAuth: () => set({ user: null }),
   }))
 }

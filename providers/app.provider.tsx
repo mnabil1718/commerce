@@ -1,9 +1,14 @@
 import { Toaster } from "sonner";
 import { ThemeProvider } from "next-themes";
 import { TooltipProvider } from "@/components/ui/tooltip";
-// import { AuthStoreProvider } from "./auth.provider";
+import { AuthStoreProvider } from "./auth.provider";
+import { createClient } from "@/lib/supabase/server";
 
-export function AppProvider({ children }: { children: React.ReactNode }) {
+export async function AppProvider({ children }: { children: React.ReactNode }) {
+  const supabase = await createClient();
+  const { data } = await supabase.auth.getUser();
+  const user = data.user;
+
   return (
     <ThemeProvider
       attribute="class"
@@ -11,10 +16,10 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       enableSystem
       disableTransitionOnChange
     >
-      {/* <AuthStoreProvider> */}
-      <TooltipProvider>{children}</TooltipProvider>
-      <Toaster />
-      {/* </AuthStoreProvider> */}
+      <AuthStoreProvider user={user}>
+        <TooltipProvider>{children}</TooltipProvider>
+        <Toaster />
+      </AuthStoreProvider>
     </ThemeProvider>
   );
 }

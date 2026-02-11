@@ -1,9 +1,10 @@
 "use client";
 
-import { createClient } from "@/lib/supabase/client";
-import { AuthStore, createAuthStore } from "@/stores/user-store";
-import { createContext, useContext, useEffect, useState } from "react";
 import { useStore } from "zustand";
+import { User } from "@supabase/supabase-js";
+import { createContext, useContext, useEffect, useState } from "react";
+import { AuthStore, createAuthStore } from "@/stores/user-store";
+import { createClient } from "@/lib/supabase/client";
 
 export type AuthStoreApi = ReturnType<typeof createAuthStore>;
 
@@ -13,51 +14,30 @@ export const AuthStoreContext = createContext<AuthStoreApi | undefined>(
 
 export type AuthStoreProviderProps = {
   children: React.ReactNode;
+  user: User | null;
 };
 
-export const AuthStoreProvider = ({ children }: AuthStoreProviderProps) => {
-  const [store] = useState(() => createAuthStore());
+export const AuthStoreProvider = ({
+  children,
+  user,
+}: AuthStoreProviderProps) => {
   const supabase = createClient();
 
+  const [store] = useState(() => createAuthStore({ user }));
+
   useEffect(() => {
-    // This function fetches both the Auth User and the Public Profile
-    const initializeAuth = async () => {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-
-      if (user) {
-        // Fetch custom profile data from your public.profiles table
-        const { data: profile } = await supabase
-          .from("profiles")
-          .select("*")
-          .eq("id", user.id)
-          .single();
-
-        store.getState().setAuth(user, profile);
-      }
-    };
-
-    initializeAuth();
-
-    // Listen for sign-in/sign-out events to update Zustand automatically
     const {
       data: { subscription },
-    } = supabase.auth.onAuthStateChange(async (event, session) => {
+    } = supabase.auth.onAuthStateChange((event, session) => {
       if (session?.user) {
-        const { data: profile } = await supabase
-          .from("profiles")
-          .select("*")
-          .eq("id", session.user.id)
-          .single();
-        store.getState().setAuth(session.user as any, profile);
+        store.getState().setAuth(session.user);
       } else if (event === "SIGNED_OUT") {
         store.getState().clearAuth();
       }
     });
 
     return () => subscription.unsubscribe();
-  }, [store, supabase]);
+  }, [supabase, store]);
 
   return (
     <AuthStoreContext.Provider value={store}>

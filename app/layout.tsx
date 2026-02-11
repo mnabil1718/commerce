@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { DM_Sans } from "next/font/google";
 import "./globals.css";
 import { AppProvider } from "@/providers/app.provider";
+import { Suspense } from "react";
 
 const defaultUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
@@ -29,7 +30,9 @@ export default function RootLayout({
       <body
         className={`${geistSans.className} antialiased bg-background text-foreground`}
       >
-        <AppProvider>{children}</AppProvider>
+        <Suspense>
+          <AppProvider>{children}</AppProvider>
+        </Suspense>
       </body>
     </html>
   );

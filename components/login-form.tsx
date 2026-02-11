@@ -16,11 +16,13 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Brand } from "./brand";
+import { useAuthStore } from "@/providers/auth.provider";
 
 export function LoginForm({
   className,
   ...props
 }: React.ComponentPropsWithoutRef<"div">) {
+  const setAuth = useAuthStore((state) => state.setAuth);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -40,6 +42,10 @@ export function LoginForm({
       });
 
       if (error) throw error;
+
+      setAuth(data.user);
+      router.refresh();
+
       // Update this route to redirect to an authenticated route. The user already has an active session.
       if (data.user.user_metadata.role === "admin") {
         router.push("/admin/dashboard");

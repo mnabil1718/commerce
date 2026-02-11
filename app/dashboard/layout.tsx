@@ -1,7 +1,9 @@
-export default function ProtectedLayout({
+import { PrivateLayout } from "@/layouts/private";
+
+export default function DashboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  return <>{children}</>;
+  return <PrivateLayout>{children}</PrivateLayout>;
 }

@@ -15,8 +15,8 @@ export const metadata: Metadata = {
 
 const geistSans = DM_Sans({
   variable: "--font-geist-sans",
-  display: "swap",
   subsets: ["latin"],
+  display: "swap",
 });
 
 export default function RootLayout({

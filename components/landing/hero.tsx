@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 export function Hero() {
   return (
     <div className="col-span-2 grid grid-cols-2 gap-5">
-      <Card className="col-span-2 overflow-hidden">
+      <Card className="col-span-2 overflow-hidden p-0">
         <CardContent className="relative grid grid-cols-2 gap-0 p-0 overflow-hidden">
           <div className="col-span-2 md:col-span-1 p-7 space-y-5">
             <Badge
@@ -43,7 +43,7 @@ export function Hero() {
         </CardContent>
       </Card>
 
-      <Card className="col-span-2 md:col-span-1 overflow-hidden">
+      <Card className="col-span-2 md:col-span-1 overflow-hidden p-0">
         <CardContent className="relative flex flex-col w-full p-0 h-full overflow-hidden">
           <Image
             src={Coffee}
@@ -70,7 +70,7 @@ export function Hero() {
         </CardContent>
       </Card>
 
-      <Card className="col-span-2 md:col-span-1 overflow-hidden">
+      <Card className="col-span-2 md:col-span-1 overflow-hidden p-0">
         <CardContent className="relative flex flex-col w-full p-0 h-full overflow-hidden">
           <Image
             src={Icecream}

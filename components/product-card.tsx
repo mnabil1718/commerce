@@ -12,9 +12,9 @@ export type ProductCardProps = {
 export function ProductCard({ product }: ProductCardProps) {
   return (
     <Link href={`/products/${product.slug}`}>
-      <Card className="col-span-1 overflow-hidden">
+      <Card className="col-span-1 overflow-hidden p-0">
         <CardContent className="relative gap-0 p-0 overflow-hidden">
-          <div className="relative col-span-2 aspect-[3/2] overflow-hidden">
+          <div className="relative col-span-2 aspect-3/2 overflow-hidden">
             <Image
               src={product.image}
               blurDataURL={product.image}

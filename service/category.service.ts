@@ -3,6 +3,9 @@
 import { createClient } from "@/lib/supabase/server";
 import { ActionResult } from "@/types/action.type";
 import { AddCategoryFormSchemaType, Category } from "@/types/category.type";
+import { upload } from "./storage.service";
+import { BUCKET_NAME, IMAGES_PATH } from "@/constants/storage";
+import { getPublicUrl } from "@/utils/storage";
 
 
 export async function getProductCategories(): Promise<ActionResult<Category[]>> {
@@ -17,10 +20,17 @@ export async function getProductCategories(): Promise<ActionResult<Category[]>> 
 
 export async function createCategory(req: AddCategoryFormSchemaType): Promise<ActionResult<Category | null>> {
     const supabase = await createClient();
+        let url: string | null = null;
+    
+        if (req.image) {
+          const fileInfo = await upload(BUCKET_NAME, IMAGES_PATH, req.image);
+          url = fileInfo ? getPublicUrl(fileInfo.fullPath) : null;
+        }
+
     const { data, error } = await supabase.from("categories").insert({
         title: req.title,
         slug: req.slug,
-        image: req.image ?? null,
+        image: url,
     }).select().single();
 
     if (error) throw error;

@@ -24,8 +24,9 @@ export const columns: ColumnDef<ProductWithCategory>[] = [
             <Image
               src={image}
               alt={title}
-              fill
               className="w-full h-full object-cover"
+              sizes="80px"
+              fill
             />
           )}
         </div>

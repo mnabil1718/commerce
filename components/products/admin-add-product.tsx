@@ -18,7 +18,6 @@ import {
 import { MAX_PRODUCT_DESCRIPTION_LENGTH } from "@/constants/product";
 
 import { Category } from "@/types/category.type";
-import { FormUpload } from "../form-upload";
 import { SlugInput } from "./slug-input";
 import { CategorySelector } from "./category-selector";
 import { AddProductFormSchemaType, Product } from "@/types/product.type";
@@ -27,6 +26,7 @@ import Link from "next/link";
 import { createProduct } from "@/service/product.service";
 import { Ellipsis } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { FileUpload } from "../file-upload";
 
 export type AdminAddProductFormProps = {
   categories: Category[];
@@ -39,7 +39,7 @@ function getInitialData(categories: Category[], product?: Product) {
       title: "",
       slug: "",
       category_id: categories[0]?.id.toString() ?? "",
-      image: undefined,
+      image: null,
       stock: 0,
       price: 0,
       description: "",
@@ -50,7 +50,7 @@ function getInitialData(categories: Category[], product?: Product) {
     title: product.title,
     slug: product.slug,
     category_id: product.category_id.toString(),
-    image: product.image || undefined,
+    image: null, // on update, image url is passed to to upload component, not here
     stock: product.stock,
     price: product.price,
     description: product.description,
@@ -213,10 +213,7 @@ export function AdminAddProductForm({
             <CardTitle>Upload Image</CardTitle>
           </CardHeader>
           <CardContent className="flex-1">
-            <FormUpload<AddProductFormSchemaType>
-              bucketName="uploads"
-              path="images"
-            />
+            <FileUpload<AddProductFormSchemaType> />
           </CardContent>
         </Card>
         <div className="flex w-full justify-end gap-5">

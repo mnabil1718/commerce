@@ -22,11 +22,11 @@ import { AddCategoryFormSchema } from "@/schema/category.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Required } from "../form/required";
 import { SlugInput } from "./slug-input";
-import { FormUpload } from "../form-upload";
 import { createCategory } from "@/service/category.service";
 import { TooltipWrapper } from "../tooltip-wrapper";
 import { Ellipsis, Plus } from "lucide-react";
 import { useState } from "react";
+import { FileUpload } from "../file-upload";
 
 export type AddCategoryDialogProps = {
   onCreatedCallback: (c: Category) => void;
@@ -109,10 +109,7 @@ export function AddCategoryDialog({
               <FieldDescription>
                 For best results, upload image with square aspect ratio 1:1
               </FieldDescription>
-              <FormUpload<AddCategoryFormSchemaType>
-                bucketName="uploads"
-                path="images"
-              />
+              <FileUpload<AddCategoryFormSchemaType> />
             </Field>
           </FieldGroup>
           <DialogFooter>

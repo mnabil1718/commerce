@@ -1,8 +1,8 @@
 import { nanoid } from "nanoid";
 
-
-export function getPublicUrl(bucket: string, asset: string): string {
-    return `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/${bucket}/${asset}`;
+// fullPath includes bucket and folder prefixes
+export function getPublicUrl(fullPath: string): string {
+    return `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/${fullPath}`;
 }
 
 export function generateUniqueFileName(file: File): string {

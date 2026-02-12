@@ -3,9 +3,19 @@
 import { createClient } from "@/lib/supabase/server";
 import { ActionResult } from "@/types/action.type";
 import { AddProductFormSchemaType, Product, ProductWithCategory } from "@/types/product.type";
+import { upload } from "./storage.service";
+import { BUCKET_NAME, IMAGES_PATH } from "@/constants/storage";
+import { getPublicUrl } from "@/utils/storage";
 
 export async function createProduct(req: AddProductFormSchemaType): Promise<void> {
     const supabase = await createClient();
+    let url: string | null = null;
+
+    if (req.image) {
+      const fileInfo = await upload(BUCKET_NAME, IMAGES_PATH, req.image);
+      url = fileInfo ? getPublicUrl(fileInfo.fullPath) : null;
+    }
+
     const { error } = await supabase.from("products").insert({
         title: req.title,
         description: req.description,
@@ -13,14 +23,20 @@ export async function createProduct(req: AddProductFormSchemaType): Promise<void
         stock: req.stock,
         price: req.price,
         slug: req.slug,
-        image: req.image ?? null,
+        image: url,
     });
 
     if (error) throw error;
 }
 
-export async function updateProduct(id: number, req: AddProductFormSchemaType): Promise<void> {
+export async function updateProduct(id: number, req: AddProductFormSchemaType, prevImageUrl: string | null): Promise<void> {
     const supabase = await createClient();
+
+    if (req.image) {
+      const fileInfo = await upload(BUCKET_NAME, IMAGES_PATH, req.image);
+      prevImageUrl = fileInfo ? getPublicUrl(fileInfo.fullPath) : null;
+    }
+
     const { error } = await supabase.from("products").update({
         title: req.title,
         description: req.description,
@@ -28,7 +44,7 @@ export async function updateProduct(id: number, req: AddProductFormSchemaType): 
         stock: req.stock,
         price: req.price,
         slug: req.slug,
-        image: req.image ?? null,
+        image: prevImageUrl,
     }).eq("id", id);
 
     if (error) throw error;

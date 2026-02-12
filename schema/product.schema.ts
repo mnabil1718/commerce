@@ -23,7 +23,9 @@ export const AddProductFormSchema = z.object({
     .string("Please select a category")
     .min(1),
 
-  image: z.url("Invalid image URL").optional(),
+  image: z.file().nullable().refine((file) => !file || file.size <= 3 * 1024 * 1024, {
+    message: "File size must be less than 3MB",
+  }),
 
   stock: z.coerce.number<number>().int().nonnegative("Stock cannot be negative"),
 

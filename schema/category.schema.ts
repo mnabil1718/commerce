@@ -16,5 +16,7 @@ export const AddCategoryFormSchema = z.object({
       "Slug must be URL-safe (lowercase, numbers, and hyphens only)"
     ),
 
-  image: z.url("Invalid image URL").optional(),
+  image: z.file().nullable().refine((file) => !file || file.size <= 3 * 1024 * 1024, {
+    message: "File size must be less than 3MB",
+  }),
 });

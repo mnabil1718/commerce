@@ -5,7 +5,6 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 import { Button } from "./ui/button";
@@ -14,43 +13,48 @@ import { DeleteDialog } from "./delete-dialog";
 import Link from "next/link";
 import { Row } from "@tanstack/react-table";
 import { ProductWithCategory } from "@/types/product.type";
+import { useState } from "react";
 
 export function ActionCell({ row }: { row: Row<ProductWithCategory> }) {
   const router = useRouter();
+  const [open, setOpen] = useState<boolean>(false);
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const deleteFn = async (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
     await deleteProductById(row.original.id);
+
+    setOpen(false);
     router.refresh();
   };
 
   return (
-    <DropdownMenu>
+    // 3. Pass open and onOpenChange to the DropdownMenu
+    <DropdownMenu open={open} onOpenChange={setOpen}>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" className="h-8 w-8 p-0">
-          <span className="sr-only">Open menu</span>
           <MoreHorizontal className="h-4 w-4" />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         <DropdownMenuLabel>Actions</DropdownMenuLabel>
-        <DropdownMenuSeparator />
-        <DropdownMenuItem>
+
+        <DropdownMenuItem asChild>
           <Link
             href={`/admin/products/${row.original.id}/edit`}
             className="flex items-center gap-2"
           >
-            <Pencil /> Update Data
+            <Pencil className="h-4 w-4" /> Update Data
           </Link>
         </DropdownMenuItem>
+
         <DropdownMenuItem
           className="text-destructive"
           onSelect={(e) => e.preventDefault()}
         >
           <DeleteDialog
             trigger={
-              <div className="flex items-center gap-2">
-                <Trash /> Delete Data
+              <div className="flex w-full items-center gap-2">
+                <Trash className="h-4 w-4" /> Delete Data
               </div>
             }
             deleteCallback={deleteFn}

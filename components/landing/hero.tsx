@@ -1,13 +1,22 @@
 import Image from "next/image";
-import BannerImage from "../../public/teh-poci.jpg";
 import Coffee from "../../public/matcha-latte.jpg";
 import Icecream from "../../public/ice-cream.jpg";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ArrowRight, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { getSingleLatestProduct } from "@/service/product.service";
+import { Product } from "@/types/product.type";
+import { displayRupiah } from "@/utils/price";
 
-export function Hero() {
+async function getSingleBestSellerProduct(): Promise<Product> {
+  const { data } = await getSingleLatestProduct();
+  return data;
+}
+
+export async function Hero() {
+  const featured = await getSingleBestSellerProduct();
+
   return (
     <div className="col-span-2 grid grid-cols-2 gap-5">
       <Card className="col-span-2 overflow-hidden p-0">
@@ -20,26 +29,32 @@ export function Hero() {
               <Star size={12} /> Best Seller
             </Badge>
             <div>
-              <h1 className="text-3xl tracking-tight font-bold mb-3">
-                Signature Teh Poci Original
+              <h1
+                title={featured.title}
+                className="text-3xl tracking-tight font-bold mb-3 line-clamp-2"
+              >
+                {featured.title}
               </h1>
-              <p>
-                Authentic Teh Poci with a timeless, bold aroma — classic
-                Indonesian tea in every sip.
-              </p>
+              <p className="line-clamp-2">{featured.description}</p>
             </div>
             <h2 className="font-semibold text-3xl tracking-tight text-primary">
-              Rp 57.000
+              {displayRupiah(featured.price)}
             </h2>
 
             <Button className="rounded-full">Order Now</Button>
           </div>
-          <Image
-            src={BannerImage}
-            alt="Signature Teh Poci"
-            placeholder="blur"
-            className="order-first md:order-last col-span-2 md:col-span-1 w-full h-full object-cover overflow-hidden"
-          />
+          <div className="relative order-first md:order-last col-span-2 md:col-span-1 overflow-hidden w-full h-full min-h-72">
+            {featured.image && (
+              <Image
+                src={featured.image}
+                alt={featured.title}
+                placeholder="blur"
+                blurDataURL={featured.image}
+                fill
+                className="w-full h-full object-cover"
+              />
+            )}
+          </div>
         </CardContent>
       </Card>
 

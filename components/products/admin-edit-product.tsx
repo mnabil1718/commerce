@@ -203,7 +203,7 @@ export function AdminEditProductForm({
           </CardContent>
         </Card>
         <div className="flex w-full justify-end gap-5">
-          <Link href={`/admin/dashboard`}>
+          <Link href={`/admin/products`}>
             <Button variant={"ghost"} type="button">
               Cancel
             </Button>

@@ -53,9 +53,34 @@ export async function getProducts(): Promise<
   return { data };
 }
 
+export async function getProductsWithoutRelation(): Promise<ActionResult<Product[]>> {
+
+  const supabase = await createClient();
+
+  const { data, error } = await supabase
+    .from("products")
+    .select()
+    .order("created_at", { ascending: false });
+
+  if (error) throw error;
+
+  return { data };
+
+}
+
 export async function getProductById(id: number): Promise<ActionResult<Product>> {
     const supabase = await createClient();
     const { data, error } = await supabase.from("products").select().eq("id", id).single();
+
+    if (error) throw error;
+
+    return { data };
+}
+
+
+export async function getSingleLatestProduct(): Promise<ActionResult<Product>> {
+    const supabase = await createClient();
+    const { data, error } = await supabase.from("products").select().order("created_at", { ascending: false }).limit(1).single();
 
     if (error) throw error;
 

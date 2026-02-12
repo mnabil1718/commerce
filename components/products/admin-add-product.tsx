@@ -72,6 +72,7 @@ export function AdminAddProductForm({
   const add = async (req: AddProductFormSchemaType) => {
     await createProduct(req);
 
+    form.reset();
     router.push("/admin/products");
   };
 
@@ -219,7 +220,7 @@ export function AdminAddProductForm({
           </CardContent>
         </Card>
         <div className="flex w-full justify-end gap-5">
-          <Link href={`/admin/dashboard`}>
+          <Link href={`/admin/products`}>
             <Button variant={"ghost"} type="button">
               Cancel
             </Button>

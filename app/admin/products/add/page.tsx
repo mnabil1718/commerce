@@ -9,7 +9,7 @@ const crumbs: Crumb[] = [
     isPage: false,
   },
   {
-    label: " Add Products",
+    label: " Add Product",
     href: "",
     isPage: true,
   },

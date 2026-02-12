@@ -2,11 +2,13 @@
 
 import { ActionCell } from "@/components/action-cell";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 
 import { ProductWithCategory } from "@/types/product.type";
 import { displayRupiah } from "@/utils/price";
 
 import { ColumnDef } from "@tanstack/react-table";
+import { ArrowUpDown } from "lucide-react";
 import Image from "next/image";
 
 export const columns: ColumnDef<ProductWithCategory>[] = [
@@ -47,12 +49,36 @@ export const columns: ColumnDef<ProductWithCategory>[] = [
   },
   {
     accessorKey: "stock",
-    header: "Stock",
+    header: ({ column }) => {
+      return (
+        <div className="flex items-center gap-2">
+          Stock
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            <ArrowUpDown className="h-4 w-4" />
+          </Button>
+        </div>
+      );
+    },
   },
 
   {
     accessorKey: "price",
-    header: "Price",
+    header: ({ column }) => {
+      return (
+        <div className="flex items-center gap-2">
+          Price
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            <ArrowUpDown className="h-4 w-4" />
+          </Button>
+        </div>
+      );
+    },
     cell: ({ row }) => {
       const price = Number(row.getValue("price"));
       const formatted = displayRupiah(price);
@@ -62,7 +88,19 @@ export const columns: ColumnDef<ProductWithCategory>[] = [
   },
   {
     accessorKey: "created_at",
-    header: "Created at",
+    header: ({ column }) => {
+      return (
+        <div className="flex items-center gap-2">
+          Created At
+          <Button
+            variant="ghost"
+            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          >
+            <ArrowUpDown className="h-4 w-4" />
+          </Button>
+        </div>
+      );
+    },
     cell: ({ row }) => {
       const dateValue = row.getValue("created_at");
 

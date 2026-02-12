@@ -29,6 +29,22 @@ export function FormUpload<T extends { image?: string }>({
   });
 
   useEffect(() => {
+    // 1. Reset on Mount: Ensure we start clean
+    props.setFiles([]);
+    props.setSuccesses([]);
+    props.setErrors([]);
+
+    // 2. Cleanup on Unmount: Wipe state when the user leaves the page
+    return () => {
+      props.setFiles([]);
+      props.setSuccesses([]);
+      props.setErrors([]);
+    };
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
     if (props.isSuccess && props.successes.length > 0) {
       const url = getPublicUrl(bucketName, `${path}/${props.successes[0]}`);
 

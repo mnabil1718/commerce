@@ -1,25 +1,15 @@
+import { getProductCategories } from "@/service/category.service";
+import { Category } from "@/types/category.type";
 import Image from "next/image";
 
-const categories = [
-  {
-    image: "/categories/matcha.jpg",
-    label: "Original Matcha",
-  },
-  {
-    image: "/categories/latte.jpg",
-    label: "Coffee",
-  },
-  {
-    image: "/categories/ice-cream.jpg",
-    label: "Ice Creams & Desserts",
-  },
-  {
-    image: "/categories/green-tea.jpg",
-    label: "Green Tea",
-  },
-];
+async function getCategories(): Promise<Category[]> {
+  const { data: categories } = await getProductCategories();
+  return categories;
+}
 
-export function CategoriesSection() {
+export async function CategoriesSection() {
+  const categories = await getCategories();
+
   return (
     <section id="categories" className="col-span-2">
       <h2 className="text-2xl font-bol tracking-tight font-medium mb-5">
@@ -31,16 +21,18 @@ export function CategoriesSection() {
             <li key={i} className="col-span-2 md:col-span-1">
               {" "}
               <div className="flex flex-col items-center gap-3 p-5 hover:bg-secondary/10 rounded-xl cursor-pointer">
-                <div className="relative bg-transparent w-16 h-16 rounded-full overflow-hidden">
-                  <Image
-                    src={c.image}
-                    alt={c.label}
-                    width={120}
-                    height={120}
-                    className="w-full h-full object-cover"
-                  />
+                <div className="relative bg-secondary/20 w-16 h-16 rounded-full overflow-hidden">
+                  {c.image && (
+                    <Image
+                      src={c.image}
+                      alt={c.title}
+                      width={120}
+                      height={120}
+                      className="w-full h-full object-cover"
+                    />
+                  )}
                 </div>{" "}
-                <span>{c.label}</span>
+                <span>{c.title}</span>
               </div>
             </li>
           );

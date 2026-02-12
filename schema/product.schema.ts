@@ -27,7 +27,7 @@ export const AddProductFormSchema = z.object({
 
   stock: z.coerce.number<number>().int().nonnegative("Stock cannot be negative"),
 
-  price: z.coerce.number<number>().positive("Price must be greater than 0"),
+  price: z.coerce.number<number>().nonnegative("Price cannot be negative"),
 
   description: z
     .string()

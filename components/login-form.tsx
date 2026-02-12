@@ -17,6 +17,8 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Brand } from "./brand";
 import { useAuthStore } from "@/providers/auth.provider";
+import { Or } from "./or";
+import { GoogleSignInForm } from "./google/sign-in";
 
 export function LoginForm({
   className,
@@ -119,6 +121,8 @@ export function LoginForm({
               </Link>
             </div>
           </form>
+          <Or />
+          <GoogleSignInForm />
         </CardContent>
       </Card>
     </div>

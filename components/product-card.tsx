@@ -4,6 +4,7 @@ import { Product } from "@/types/product.type";
 import { displayRupiah } from "@/utils/price";
 import Link from "next/link";
 import { StockBadge } from "./stock-badge";
+import { cn } from "@/lib/utils";
 
 export type ProductCardProps = {
   product: Product;
@@ -15,13 +16,18 @@ export function ProductCard({ product }: ProductCardProps) {
       <Card className="col-span-1 overflow-hidden p-0">
         <CardContent className="relative gap-0 p-0 overflow-hidden">
           <div className="relative col-span-2 aspect-3/2 overflow-hidden">
-            <Image
-              src={product.image}
-              blurDataURL={product.image}
-              alt={product.title}
-              fill={true}
-              className="object-cover"
-            />
+            {product.image && (
+              <Image
+                src={product.image}
+                blurDataURL={product.image}
+                alt={product.title}
+                fill={true}
+                className={cn(
+                  "object-cover",
+                  product.stock !== 0 ? "" : "grayscale",
+                )}
+              />
+            )}
           </div>
           <div className="p-5 space-y-1">
             <StockBadge stock={product.stock} />

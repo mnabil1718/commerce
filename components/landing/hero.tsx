@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { getSingleLatestProduct } from "@/service/product.service";
 import { Product } from "@/types/product.type";
 import { displayRupiah } from "@/utils/price";
+import Link from "next/link";
 
 async function getSingleBestSellerProduct(): Promise<Product> {
   const { data } = await getSingleLatestProduct();
@@ -41,7 +42,9 @@ export async function Hero() {
               {displayRupiah(featured.price)}
             </h2>
 
-            <Button className="rounded-full">Order Now</Button>
+            <Link href={`/products/${featured.id}`}>
+              <Button className="rounded-full">Order Now</Button>
+            </Link>
           </div>
           <div className="relative order-first md:order-last col-span-2 md:col-span-1 overflow-hidden w-full h-full min-h-72">
             {featured.image && (

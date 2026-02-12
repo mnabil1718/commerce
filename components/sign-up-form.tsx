@@ -16,6 +16,8 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Brand } from "./brand";
+import { Or } from "./or";
+import { GoogleSignInForm } from "./google/sign-in";
 
 export function SignUpForm({
   className,
@@ -141,6 +143,8 @@ export function SignUpForm({
               </Link>
             </div>
           </form>
+          <Or />
+          <GoogleSignInForm />
         </CardContent>
       </Card>
     </div>

@@ -87,6 +87,12 @@ export async function getProductsWithoutRelation({
   }
 
   switch (sort) {
+    case "priciest": 
+      query = query.order("price", { ascending: false });
+      break;
+    case "cheapest": 
+      query = query.order("price", { ascending: true });
+      break;
     case "a-z":
       query = query.order("title", { ascending: true });
       break;
@@ -115,6 +121,28 @@ export async function getProductById(id: number): Promise<ActionResult<Product>>
     if (error) throw error;
 
     return { data };
+}
+
+export async function getProductBySlug(
+  slug: string
+): Promise<ActionResult<ProductWithCategory>> {
+  const supabase = await createClient();
+
+  const { data, error } = await supabase
+    .from("products")
+    .select(`
+      *,
+      category:categories (*)
+    `)
+    .eq("slug", slug)
+    .single()
+    .overrideTypes<ProductWithCategory, { merge: false }>();
+
+  if (error) {
+    throw error;
+  }
+
+  return { data };
 }
 
 

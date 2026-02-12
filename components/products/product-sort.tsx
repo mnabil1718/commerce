@@ -25,6 +25,8 @@ export function ProductSort() {
       <option value="a-z">A-Z</option>
       <option value="oldest">Oldest</option>
       <option value="newest">Newest</option>
+      <option value="priciest">Priciest</option>
+      <option value="cheapest">Cheapest</option>
     </select>
   );
 }

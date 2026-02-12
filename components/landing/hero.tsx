@@ -42,7 +42,7 @@ export async function Hero() {
               {displayRupiah(featured.price)}
             </h2>
 
-            <Link href={`/products/${featured.id}`}>
+            <Link href={`/products/${featured.slug}`}>
               <Button className="rounded-full">Order Now</Button>
             </Link>
           </div>

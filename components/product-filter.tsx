@@ -13,6 +13,7 @@ import {
   SelectValue,
 } from "./ui/select";
 import { Category } from "@/types/category.type";
+import { displayRupiah } from "@/utils/price";
 
 export type ProductFilterProps = {
   min: number;
@@ -68,9 +69,9 @@ export function ProductFilter({ min, max, categories }: ProductFilterProps) {
             className="w-full"
           />
 
-          <div className="flex justify-between text-xs text-muted-foreground/80">
-            <p>Rp {price[0]}</p>
-            <p>Rp {price[1]}</p>
+          <div className="flex justify-between text-xs font-semibold text-muted-foreground/80">
+            <p>{displayRupiah(price[0])}</p>
+            <p>{displayRupiah(price[1])}</p>
           </div>
         </section>
 

@@ -32,9 +32,13 @@ export async function createProduct(req: AddProductFormSchemaType): Promise<void
 export async function updateProduct(id: number, req: AddProductFormSchemaType, prevImageUrl: string | null): Promise<void> {
     const supabase = await createClient();
 
-    if (req.image) {
+    if (req.image !== null) {
       const fileInfo = await upload(BUCKET_NAME, IMAGES_PATH, req.image);
       prevImageUrl = fileInfo ? getPublicUrl(fileInfo.fullPath) : null;
+    }
+
+    if (req.image === null) {
+        prevImageUrl = null;
     }
 
     const { error } = await supabase.from("products").update({

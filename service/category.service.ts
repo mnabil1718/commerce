@@ -10,7 +10,7 @@ import { getPublicUrl } from "@/utils/storage";
 
 export async function getProductCategories(): Promise<ActionResult<Category[]>> {
     const supabase = await createClient();
-    const { data, error } = await supabase.from("categories").select();
+    const { data, error } = await supabase.from("categories").select().order("created_at", { ascending: false });
 
     if (error) throw error;
 
@@ -36,4 +36,34 @@ export async function createCategory(req: AddCategoryFormSchemaType): Promise<Ac
     if (error) throw error;
 
     return { data };
+}
+
+
+export async function updateCategory(id: number, imageurl: string | null, req: AddCategoryFormSchemaType): Promise<void> {
+    const supabase = await createClient();
+    
+    if (req.image !== null) {
+        const fileInfo = await upload(BUCKET_NAME, IMAGES_PATH, req.image);
+        imageurl = fileInfo ? getPublicUrl(fileInfo.fullPath) : null;
+    }
+
+    if (req.image === null) {
+        imageurl = null;
+    }
+
+    const { error } = await supabase.from("categories").update({
+        title: req.title,
+        slug: req.slug,
+        image: imageurl,
+    }).eq("id", id);
+
+    if (error) throw error;
+}
+
+export async function deleteCategoryById(id: number): Promise<void> {
+    const supabase = await createClient();
+    const { error } = await supabase.from("categories").delete().eq("id", id);
+
+
+    if (error) throw error;
 }

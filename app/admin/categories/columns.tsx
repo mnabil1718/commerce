@@ -1,17 +1,14 @@
 "use client";
 
-import { ProductActionCell } from "@/components/products/product-action-cell";
-import { Badge } from "@/components/ui/badge";
+import { CategoryActionCell } from "@/components/categories/category-action-cell";
 import { Button } from "@/components/ui/button";
-
-import { ProductWithCategory } from "@/types/product.type";
-import { displayRupiah } from "@/utils/price";
+import { Category } from "@/types/category.type";
 
 import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown } from "lucide-react";
 import Image from "next/image";
 
-export const columns: ColumnDef<ProductWithCategory>[] = [
+export const columns: ColumnDef<Category>[] = [
   {
     accessorKey: "image",
     header: "Thumbnail",
@@ -39,54 +36,6 @@ export const columns: ColumnDef<ProductWithCategory>[] = [
     header: "Title",
   },
 
-  {
-    accessorKey: "category",
-    header: "Category",
-    cell: ({ row }) => {
-      const category = row.original.category;
-
-      return <Badge variant="outline">{category?.title ?? "-"}</Badge>;
-    },
-  },
-  {
-    accessorKey: "stock",
-    header: ({ column }) => {
-      return (
-        <div className="flex items-center gap-2">
-          Stock
-          <Button
-            variant="ghost"
-            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          >
-            <ArrowUpDown className="h-4 w-4" />
-          </Button>
-        </div>
-      );
-    },
-  },
-
-  {
-    accessorKey: "price",
-    header: ({ column }) => {
-      return (
-        <div className="flex items-center gap-2">
-          Price
-          <Button
-            variant="ghost"
-            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          >
-            <ArrowUpDown className="h-4 w-4" />
-          </Button>
-        </div>
-      );
-    },
-    cell: ({ row }) => {
-      const price = Number(row.getValue("price"));
-      const formatted = displayRupiah(price);
-
-      return <div className="font-medium">{formatted}</div>;
-    },
-  },
   {
     accessorKey: "created_at",
     header: ({ column }) => {
@@ -119,6 +68,6 @@ export const columns: ColumnDef<ProductWithCategory>[] = [
   {
     id: "actions",
     header: "Actions",
-    cell: ({ row }) => <ProductActionCell row={row} />,
+    cell: ({ row }) => <CategoryActionCell row={row} />,
   },
 ];

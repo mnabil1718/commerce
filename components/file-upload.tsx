@@ -16,29 +16,25 @@ export function FileUpload<T extends { image?: File | null }>({
   const FIELD_NAME = "image" as Path<T>;
   const form = useFormContext<T>();
   const [url, setUrl] = useState<string | undefined>(initialFileUrl); // use to display preview / not
+  const [removed, setRemoved] = useState<boolean>(false);
 
   const image = form.watch(FIELD_NAME);
 
   useEffect(() => {
-    // If user selected new file
     if (image instanceof File) {
-      const url = URL.createObjectURL(image);
-      setUrl(url);
+      const objectUrl = URL.createObjectURL(image);
+      setUrl(objectUrl);
 
-      return () => {
-        URL.revokeObjectURL(url);
-      };
+      return () => URL.revokeObjectURL(objectUrl);
     }
 
-    // If no file selected but initialUrl exists (edit mode)
-    if (!image && initialFileUrl) {
+    if (!image && initialFileUrl && !removed) {
       setUrl(initialFileUrl);
       return;
     }
 
-    // If cleared
     setUrl("");
-  }, [image, initialFileUrl]);
+  }, [image, initialFileUrl, removed]);
 
   return (
     <Controller
@@ -64,6 +60,7 @@ export function FileUpload<T extends { image?: File | null }>({
               }
             }}
             deletedCallback={() => {
+              setRemoved(true);
               form.setValue(FIELD_NAME, null as any, {
                 shouldValidate: true,
                 shouldDirty: true,

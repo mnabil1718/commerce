@@ -17,7 +17,6 @@ import {
 } from "../ui/input-group";
 import { MAX_PRODUCT_DESCRIPTION_LENGTH } from "@/constants/product";
 
-import { FormUpload } from "../form-upload";
 import { SlugInput } from "./slug-input";
 import { CategorySelector } from "./category-selector";
 import { AddProductFormSchemaType, Product } from "@/types/product.type";
@@ -26,6 +25,7 @@ import Link from "next/link";
 import { updateProduct } from "@/service/product.service";
 import { Ellipsis } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { FileUpload } from "../file-upload";
 
 export type AdminAddProductFormProps = {
   initialData: Product;
@@ -36,7 +36,7 @@ function getInitialData(product: Product) {
     title: product.title,
     slug: product.slug,
     category_id: product.category_id.toString(),
-    image: product.image || undefined,
+    image: null,
     stock: product.stock,
     price: product.price,
     description: product.description,
@@ -55,7 +55,7 @@ export function AdminEditProductForm({
   });
 
   const edit = async (req: AddProductFormSchemaType) => {
-    await updateProduct(initialData.id, req);
+    await updateProduct(initialData.id, req, initialData.image);
     router.push("/admin/products");
   };
 
@@ -196,9 +196,8 @@ export function AdminEditProductForm({
             <CardTitle>Upload Image</CardTitle>
           </CardHeader>
           <CardContent className="flex-1">
-            <FormUpload<AddProductFormSchemaType>
-              bucketName="uploads"
-              path="images"
+            <FileUpload<AddProductFormSchemaType>
+              initialFileUrl={initialData.image || undefined}
             />
           </CardContent>
         </Card>

@@ -6,16 +6,16 @@ import {
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuTrigger,
-} from "./ui/dropdown-menu";
-import { Button } from "./ui/button";
+} from "../ui/dropdown-menu";
+import { Button } from "../ui/button";
 import { MoreHorizontal, Pencil, Trash } from "lucide-react";
-import { DeleteDialog } from "./delete-dialog";
+import { DeleteDialog } from "../delete-dialog";
 import Link from "next/link";
 import { Row } from "@tanstack/react-table";
 import { ProductWithCategory } from "@/types/product.type";
 import { useState } from "react";
 
-export function ActionCell({ row }: { row: Row<ProductWithCategory> }) {
+export function ProductActionCell({ row }: { row: Row<ProductWithCategory> }) {
   const router = useRouter();
   const [open, setOpen] = useState<boolean>(false);
 

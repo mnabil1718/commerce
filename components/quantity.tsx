@@ -4,7 +4,6 @@ import { useState } from "react";
 import { ButtonGroup } from "./ui/button-group";
 import { Button } from "./ui/button";
 import { Minus, Plus } from "lucide-react";
-import { Input } from "./ui/input";
 
 export function Quantity() {
   const [q, setQ] = useState<number>(0);

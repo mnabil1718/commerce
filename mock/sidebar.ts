@@ -1,11 +1,15 @@
-import { Package, Receipt } from "lucide-react";
+import { Component, Package, Receipt } from "lucide-react";
 
 export const navData = [
   {
     title: "Products",
     url: "/admin/products",
     icon: Package,
-    isActive: true,
+  },
+  {
+    title: "Categories",
+    url: "/admin/categories",
+    icon: Component,
   },
   {
     title: "Orders",

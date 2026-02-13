@@ -21,18 +21,20 @@ import { AddCategoryFormSchemaType, Category } from "@/types/category.type";
 import { AddCategoryFormSchema } from "@/schema/category.schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Required } from "../form/required";
-import { SlugInput } from "./slug-input";
+import { SlugInput } from "../products/slug-input";
 import { createCategory } from "@/service/category.service";
 import { TooltipWrapper } from "../tooltip-wrapper";
-import { Ellipsis, Plus } from "lucide-react";
+import { Ellipsis } from "lucide-react";
 import { useState } from "react";
 import { FileUpload } from "../file-upload";
 
 export type AddCategoryDialogProps = {
+  children: React.ReactNode;
   onCreatedCallback: (c: Category) => void;
 };
 
 export function AddCategoryDialog({
+  children,
   onCreatedCallback,
 }: AddCategoryDialogProps) {
   const [open, setOpen] = useState<boolean>(false);
@@ -42,7 +44,7 @@ export function AddCategoryDialog({
     defaultValues: {
       title: "",
       slug: "",
-      image: undefined,
+      image: null,
     },
   });
 
@@ -50,9 +52,9 @@ export function AddCategoryDialog({
     const { data } = await createCategory(req);
 
     if (data) {
-      onCreatedCallback(data);
       form.reset();
       setOpen(false);
+      onCreatedCallback(data);
     }
   };
 
@@ -66,16 +68,13 @@ export function AddCategoryDialog({
             onClick={() => setOpen(true)}
             className="flex-none w-fit text-muted-foreground"
           >
-            <Plus />
+            {children}
           </Button>
         </TooltipWrapper>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
             <DialogTitle>Add Category</DialogTitle>
-            <DialogDescription>
-              Make changes to your profile here. Click save when you&apos;re
-              done.
-            </DialogDescription>
+            <DialogDescription></DialogDescription>
           </DialogHeader>
           <FieldGroup>
             <Controller
@@ -119,7 +118,7 @@ export function AddCategoryDialog({
             <Button
               type="button"
               className="min-w-20"
-              disabled={!form.formState.isValid || form.formState.isSubmitting}
+              disabled={form.formState.isSubmitting}
               onClick={form.handleSubmit(submit)}
             >
               {form.formState.isSubmitting ? (

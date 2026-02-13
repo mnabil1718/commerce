@@ -12,9 +12,10 @@ import {
 import { useEffect, useState } from "react";
 import { Category } from "@/types/category.type";
 import { getProductCategories } from "@/service/category.service";
-import { AddCategoryDialog } from "./add-category-dialog";
+import { AddCategoryDialog } from "../categories/add-category-dialog";
 import { AddProductFormSchemaType } from "@/types/product.type";
 import { Required } from "../form/required";
+import { Plus } from "lucide-react";
 
 export function CategorySelector() {
   const form = useFormContext<AddProductFormSchemaType>();
@@ -84,7 +85,9 @@ export function CategorySelector() {
         )}
       />
 
-      <AddCategoryDialog onCreatedCallback={added} />
+      <AddCategoryDialog onCreatedCallback={added}>
+        <Plus />
+      </AddCategoryDialog>
     </div>
   );
 }

@@ -13,7 +13,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { Brand } from "./brand";
 import { useAuthStore } from "@/providers/auth.provider";
@@ -25,6 +25,9 @@ export function LoginForm({
   ...props
 }: React.ComponentPropsWithoutRef<"div">) {
   const setAuth = useAuthStore((state) => state.setAuth);
+  const searchParams = useSearchParams();
+  const intent = searchParams.get("intent");
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -48,6 +51,11 @@ export function LoginForm({
       setAuth(data.user);
       router.refresh();
 
+      if (intent) {
+        router.push(intent);
+        return;
+      }
+
       // Update this route to redirect to an authenticated route. The user already has an active session.
       if (data.user.user_metadata.role === "admin") {
         router.push("/admin/dashboard");
@@ -60,6 +68,15 @@ export function LoginForm({
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const redirectSignup = () => {
+    if (intent) {
+      router.push(`/auth/sign-up?intent=${encodeURIComponent(intent)}`);
+      return;
+    }
+
+    router.push("/auth/sign-up");
   };
 
   return (
@@ -113,12 +130,12 @@ export function LoginForm({
             </div>
             <div className="mt-4 text-center text-sm">
               Don&apos;t have an account?{" "}
-              <Link
-                href="/auth/sign-up"
-                className="underline underline-offset-4"
+              <a
+                onClick={redirectSignup}
+                className="underline underline-offset-4 cursor-pointer"
               >
                 Sign up
-              </Link>
+              </a>
             </div>
           </form>
           <Or />

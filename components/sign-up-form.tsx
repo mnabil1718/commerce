@@ -12,8 +12,7 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { Brand } from "./brand";
 import { Or } from "./or";
@@ -23,6 +22,9 @@ export function SignUpForm({
   className,
   ...props
 }: React.ComponentPropsWithoutRef<"div">) {
+  const searchParams = useSearchParams();
+  const intent = searchParams.get("intent");
+
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -64,12 +66,26 @@ export function SignUpForm({
       });
       if (loginError) throw error;
 
+      if (intent) {
+        router.push(intent);
+        return;
+      }
+
       router.push("/dashboard");
     } catch (error: unknown) {
       setError(error instanceof Error ? error.message : "An error occurred");
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const redirectLogin = () => {
+    if (intent) {
+      router.push(`/auth/login?intent=${encodeURIComponent(intent)}`);
+      return;
+    }
+
+    router.push("/auth/login");
   };
 
   return (
@@ -138,9 +154,12 @@ export function SignUpForm({
             </div>
             <div className="mt-4 text-center text-sm">
               Already have an account?{" "}
-              <Link href="/auth/login" className="underline underline-offset-4">
+              <a
+                onClick={redirectLogin}
+                className="underline underline-offset-4 cursor-pointer"
+              >
                 Login
-              </Link>
+              </a>
             </div>
           </form>
           <Or />

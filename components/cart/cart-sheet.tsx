@@ -15,13 +15,26 @@ import { CartItemComponent } from "./cart-item";
 import { useCartStore } from "@/providers/cart.provider";
 import useStore from "@/hooks/use-store";
 import { displayRupiah } from "@/utils/price";
+import { useAuthStore } from "@/providers/auth.provider";
+import { useRouter } from "next/navigation";
 
 export function CartSheet({ children }: { children: React.ReactNode }) {
   const store = useStore(useCartStore, (state) => state);
+  const user = useAuthStore((state) => state.user);
+  const router = useRouter();
 
   if (!store) {
     return null;
   }
+
+  const checkout = () => {
+    if (!user) {
+      router.push(`/auth/login?intent=${encodeURIComponent("/checkout")}`);
+      return;
+    }
+
+    router.push(`/checkout`);
+  };
 
   return (
     <Sheet>
@@ -53,7 +66,11 @@ export function CartSheet({ children }: { children: React.ReactNode }) {
         <SheetFooter className="mt-auto">
           {store.items.length > 0 && (
             <>
-              <Button type="submit" className="font-semibold">
+              <Button
+                onClick={checkout}
+                type="submit"
+                className="font-semibold"
+              >
                 Checkout
               </Button>
               <SheetClose asChild>

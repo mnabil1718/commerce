@@ -56,9 +56,6 @@ export function CartItemComponent({ item }: CartItemComponentProps) {
                 max={item.stock}
                 changeCallback={(v) => updateQuantity(item.product_id, v)}
               />
-              {/* <span className="text-xs text-muted-foreground ml-2">
-                {item.stock} in stock
-              </span> */}
             </div>
             <p className="font-semibold">{displayRupiah(sub)}</p>
           </div>

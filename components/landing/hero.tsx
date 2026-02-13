@@ -106,7 +106,7 @@ export async function Hero() {
               </p>
             </div>
 
-            <Button className="mt-auto rounded-full bg-secondary-foreground text-foreground hover:bg-secondary-foreground/80 font-semibold group">
+            <Button className="mt-auto rounded-full bg-secondary-foreground text-foreground dark:text-background hover:bg-secondary-foreground/80 font-semibold group">
               Explore
               <ArrowRight className="group-hover:translate-x-1 transition-transform duration-200" />
             </Button>

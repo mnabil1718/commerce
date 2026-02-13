@@ -2,6 +2,8 @@ import { Suspense } from "react";
 import { AuthButton } from "./auth-button";
 import { Brand } from "./brand";
 import { Search } from "./search";
+import Link from "next/link";
+import { Cart } from "./cart/cart";
 
 export function Navbar() {
   return (
@@ -14,12 +16,12 @@ export function Navbar() {
 
         {/* Nav links */}
         <div className="hidden md:flex items-center gap-8 text-sm">
-          <a
+          <Link
             className="hover:text-muted-foreground/60 transition"
             href="/products"
           >
             Shop
-          </a>
+          </Link>
 
           {/* <a
             className="hover:text-muted-foreground/60 transition"
@@ -30,6 +32,8 @@ export function Navbar() {
           <Suspense>
             <AuthButton />
           </Suspense>
+
+          <Cart />
         </div>
       </div>
     </nav>

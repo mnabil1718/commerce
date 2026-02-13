@@ -42,13 +42,9 @@ export async function createCategory(req: AddCategoryFormSchemaType): Promise<Ac
 export async function updateCategory(id: number, imageurl: string | null, req: AddCategoryFormSchemaType): Promise<void> {
     const supabase = await createClient();
     
-    if (req.image !== null) {
+    if (req.image) {
         const fileInfo = await upload(BUCKET_NAME, IMAGES_PATH, req.image);
         imageurl = fileInfo ? getPublicUrl(fileInfo.fullPath) : null;
-    }
-
-    if (req.image === null) {
-        imageurl = null;
     }
 
     const { error } = await supabase.from("categories").update({

@@ -5,7 +5,6 @@ import { ActionResult } from "@/types/action.type";
 import { AddProductFormSchemaType, Product, ProductWithCategory } from "@/types/product.type";
 import { upload } from "./storage.service";
 import { BUCKET_NAME, IMAGES_PATH } from "@/constants/storage";
-import { getPublicUrl } from "@/utils/storage";
 
 export async function createProduct(req: AddProductFormSchemaType): Promise<void> {
     const supabase = await createClient();
@@ -13,7 +12,7 @@ export async function createProduct(req: AddProductFormSchemaType): Promise<void
 
     if (req.image) {
       const fileInfo = await upload(BUCKET_NAME, IMAGES_PATH, req.image);
-      url = fileInfo ? getPublicUrl(fileInfo.fullPath) : null;
+      url = fileInfo ? fileInfo.fullPath : null;
     }
 
     const { error } = await supabase.from("products").insert({
@@ -34,7 +33,7 @@ export async function updateProduct(id: number, req: AddProductFormSchemaType, p
 
     if (req.image) {
       const fileInfo = await upload(BUCKET_NAME, IMAGES_PATH, req.image);
-      prevImageUrl = fileInfo ? getPublicUrl(fileInfo.fullPath) : null;
+      prevImageUrl = fileInfo ? fileInfo.fullPath : null;
     }
     
 

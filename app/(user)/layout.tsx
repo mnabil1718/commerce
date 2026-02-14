@@ -2,7 +2,7 @@ import { PublicLayout } from "@/layouts/public";
 import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 
-export default async function DashboardLayout({
+export default async function UserLayout({
   children,
 }: {
   children: React.ReactNode;

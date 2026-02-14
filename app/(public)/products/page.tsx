@@ -43,14 +43,14 @@ export default async function ProductsPage({
   const { min, max, c } = await getFilterData();
 
   return (
-    <div className="grid grid-cols-3 gap-5 pt-10">
+    <div className="grid grid-cols-3 gap-5 py-10">
       {/* Filter */}
-      <aside className="relative col-span-1 gap-5">
+      <aside className="relative col-span-3 md:col-span-1 gap-5">
         <ProductFilter min={min} max={max} categories={c} />
       </aside>
 
       {/* Product Grid */}
-      <main className="col-span-2 gap-5">
+      <main className="col-span-3 md:col-span-2 gap-5">
         <div className="flex justify-between items-center mb-3">
           <p className="text-sm text-muted-foreground/70">
             Showing {p.length} products

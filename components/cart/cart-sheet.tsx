@@ -17,6 +17,7 @@ import useStore from "@/hooks/use-store";
 import { displayRupiah } from "@/utils/price";
 import { useAuthStore } from "@/providers/auth.provider";
 import { useRouter } from "next/navigation";
+import { EmptyCoffee } from "../empty-coffee";
 
 export function CartSheet({ children }: { children: React.ReactNode }) {
   const store = useStore(useCartStore, (state) => state);
@@ -48,7 +49,8 @@ export function CartSheet({ children }: { children: React.ReactNode }) {
 
         <ul className="min-h-75 flex-1 flex flex-col items-stretch gap-3">
           {store.items.length === 0 && (
-            <div className="flex-1 flex items-center justify-center text-center text-muted-foreground">
+            <div className="flex-1 flex flex-col gap-5 items-center justify-center text-center text-muted-foreground">
+              <EmptyCoffee />
               No items found
             </div>
           )}

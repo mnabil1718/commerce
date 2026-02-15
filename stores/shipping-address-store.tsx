@@ -12,9 +12,11 @@ import { createStore } from "zustand";
 
 export type ShippingAddressState = {
   addresses: ShippingAddress[];
+  selectedAddress: ShippingAddress | null;
 };
 
 export type ShippingAddressActions = {
+  setSelected: (id: string) => void;
   getPrimary: () => ShippingAddress | null;
   load: (userId: string) => Promise<void>;
   add: (addr: ShippingAddressFormSchemaType) => Promise<void>;
@@ -28,6 +30,7 @@ export type ShippingAddressStore = ShippingAddressState &
 
 export const defaultInitState: ShippingAddressState = {
   addresses: [],
+  selectedAddress: null,
 };
 
 export const createShippingAddressStore = (
@@ -35,6 +38,13 @@ export const createShippingAddressStore = (
 ) => {
   return createStore<ShippingAddressStore>()((set, get) => ({
     ...initState,
+
+    // set to be selected address
+    setSelected: (id: string) => {
+      const selected = get().addresses.find((a) => a.id === id);
+
+      if (selected) set({ selectedAddress: selected });
+    },
 
     // get single primary address
     getPrimary: () => {

@@ -13,7 +13,11 @@ import { Checkbox } from "../ui/checkbox";
 import { Ellipsis } from "lucide-react";
 import { useShippingAddressStore } from "@/providers/shipping-address.provider";
 
-export function ShippingAddressForm() {
+export type ShippingAddressFormProps = {
+  submitted?: () => void;
+};
+
+export function ShippingAddressForm({ submitted }: ShippingAddressFormProps) {
   const { add, getPrimary } = useShippingAddressStore((state) => state);
   const form = useForm<ShippingAddressFormSchemaType>({
     resolver: zodResolver(ShippingAddressFormSchema),
@@ -40,6 +44,8 @@ export function ShippingAddressForm() {
     }
 
     add(data);
+
+    if (submitted) submitted();
   };
 
   return (

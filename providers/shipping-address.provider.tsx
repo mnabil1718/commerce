@@ -24,7 +24,10 @@ export const ShippingAddressStoreProvider = ({
 }) => {
   // Initialize store with server data
   const [store] = useState(() =>
-    createShippingAddressStore({ addresses: initialAddresses }),
+    createShippingAddressStore({
+      addresses: initialAddresses,
+      selectedAddress: null,
+    }),
   );
 
   return (

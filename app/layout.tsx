@@ -3,6 +3,7 @@ import { DM_Sans } from "next/font/google";
 import "./globals.css";
 import { AppProvider } from "@/providers/app.provider";
 import { Suspense } from "react";
+import Script from "next/script";
 
 const defaultUrl = process.env.VERCEL_URL
   ? `https://${process.env.VERCEL_URL}`
@@ -33,6 +34,14 @@ export default function RootLayout({
         <Suspense>
           <AppProvider>{children}</AppProvider>
         </Suspense>
+        <Script
+          src="https://app.sandbox.midtrans.com/snap/snap.js"
+          // Get this from your Midtrans Dashboard
+          data-client-key={process.env.NEXT_PUBLIC_MIDTRANS_CLIENT_KEY}
+          // 'beforeInteractive' loads before Hydration
+          // 'afterInteractive' (default) loads after Hydration
+          strategy="beforeInteractive"
+        />
       </body>
     </html>
   );

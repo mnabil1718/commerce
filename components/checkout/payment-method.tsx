@@ -15,7 +15,7 @@ import { useCartStore } from "@/providers/cart.provider";
 import { displayRupiah } from "@/utils/price";
 import { useShippingAddressStore } from "@/providers/shipping-address.provider";
 import { useState } from "react";
-import { createOrder } from "@/service/order.service";
+import { createOrder, initPayment } from "@/service/order.service";
 import { Loader2 } from "lucide-react";
 
 export function PaymentMethod() {
@@ -34,8 +34,30 @@ export function PaymentMethod() {
 
   const pay = async () => {
     setLoading(true);
-    await createOrder(store.items, selected);
-    setLoading(false);
+
+    try {
+      const { token } = await initPayment(store.items, selected);
+
+      // Trigger Snap Popup
+      window.snap.pay(token, {
+        onSuccess: (result) => {
+          console.log("success");
+        },
+        onPending: (result) => {
+          console.log("pending");
+        },
+        onError: (result) => {
+          console.log("error");
+        },
+        onClose: () => {
+          console.log("customer closed the popup");
+        },
+      });
+    } catch (e: unknown) {
+      alert("Failed to start payment");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (

@@ -19,25 +19,24 @@ export type CartState = {
     isSyncing: boolean;
 }
 
-function mergeCarts(
-  locals: CartItem[],
-  items: CartItem[]
-): CartItem[] {
-
+function mergeCarts(locals: CartItem[], items: CartItem[]): CartItem[] {
   const map = new Map<number, CartItem>();
 
+  // 1. Put DB items in the map first
   for (const i of items) {
-    // avoid shared references of same object
     map.set(i.product_id, { ...i });
   }
 
+  // 2. Merge locals
   for (const l of locals) {
     const v = map.get(l.product_id);
-
     if (!v) {
         map.set(l.product_id, { ...l });
     } else {
-        v.qty = Math.min(v.qty + l.qty, v.stock);
+        // If the item exists in both, we don't ADD (which causes doubling).
+        // We take the local quantity IF it's higher (user just added more as guest),
+        // or just stick with the DB quantity.
+        v.qty = Math.max(v.qty, l.qty); 
     }
   }
 

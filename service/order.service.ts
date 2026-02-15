@@ -1,11 +1,17 @@
 "use server";
 
+import { snap } from "@/lib/midtrans";
 import { createClient } from "@/lib/supabase/server";
 import { CartItem } from "@/stores/cart-store";
-import { CreateOrderItem } from "@/types/order.type";
+import { ActionResult } from "@/types/action.type";
+import { CreateOrderItem, Order } from "@/types/order.type";
 import { ShippingAddress } from "@/types/shipping-address.type";
 
-export async function createOrder(items: CartItem[], addr: ShippingAddress): Promise<void> {
+export async function createOrder(items: CartItem[], addr: ShippingAddress): Promise<ActionResult<{ 
+    order: Order; 
+    items: CartItem[]; 
+    addr: ShippingAddress; 
+}>> {
 
     const supabase = await createClient();
 
@@ -41,6 +47,7 @@ export async function createOrder(items: CartItem[], addr: ShippingAddress): Pro
     // order creation
     const { data: order, error: oError } = await supabase.from("orders").insert({
         user_id: user.id,
+        status: "pending_payment",
         total_amount: safeTotal,
     }).select().single();
     if (oError) throw oError;
@@ -81,4 +88,54 @@ export async function createOrder(items: CartItem[], addr: ShippingAddress): Pro
     });
 
     if (oaError) throw oaError;
+
+    return { data: { order, items, addr } };
+}
+
+export async function updateOrder(order: Order): Promise<ActionResult<Order>> {
+    const supabase = await createClient();
+
+    const { data, error: oError } = await supabase
+        .from("orders")
+        .update({
+            total_amount: order.total_amount,
+            snap_token: order.snap_token,
+            status: order.status, 
+        })
+        .select()
+        .eq("id", order.id)
+        .maybeSingle();
+
+    if (oError) throw oError;
+    if (!data) throw new Error("Order not found");
+
+    return { data };
+}
+
+
+
+export async function initPayment(items: CartItem[], addr: ShippingAddress): Promise<{ token: string }> {
+    const { data: { order } } = await createOrder(items, addr);
+
+    const parameter = {
+        transaction_details: {
+            order_id: order.id,
+            gross_amount: order.total_amount,
+        },
+    };
+
+    try {
+        const transaction = await snap.createTransaction(parameter);
+
+        await updateOrder({ ...order, snap_token: transaction.token })
+
+        return { token: transaction.token };
+
+    } catch (error: unknown) {
+        if (error instanceof Error) {
+            throw new Error(error.message);
+        }
+
+        throw new Error("Cannot proccess transaction");
+    }
 }

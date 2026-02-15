@@ -5,8 +5,9 @@ import { useCartStore } from "@/providers/cart.provider";
 import { Button } from "./ui/button";
 import { EmptyCoffee } from "./empty-coffee";
 import Link from "next/link";
-import { Card, CardHeader, CardTitle } from "./ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
 import { ShippingAddressManager } from "./shipping-address/shipping-address-manager";
+import { CartItemComponent } from "./cart/cart-item";
 
 export function Checkout() {
   const store = useStore(useCartStore, (state) => state);
@@ -33,8 +34,21 @@ export function Checkout() {
   if (store.items.length > 0) {
     return (
       <div className="w-full grid grid-cols-3 gap-5">
-        <div className="col-span-3 md:col-span-2">
+        <div className="grid col-span-3 md:col-span-2 gap-5">
           <ShippingAddressManager />
+          <Card>
+            <CardHeader>
+              <CardTitle>Ordered Items</CardTitle>
+            </CardHeader>
+            <CardContent>
+              {store.items.length > 0 &&
+                store.items.map((item) => {
+                  return (
+                    <CartItemComponent key={item.product_id} item={item} />
+                  );
+                })}
+            </CardContent>
+          </Card>
         </div>
 
         <Card className="col-span-3 md:col-span-1">

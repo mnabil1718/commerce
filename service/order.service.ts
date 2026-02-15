@@ -2,6 +2,7 @@
 
 import { snap } from "@/lib/midtrans";
 import { createClient } from "@/lib/supabase/server";
+import { createServiceRoleClient } from "@/lib/supabase/service-role";
 import { CartItem } from "@/stores/cart-store";
 import { ActionResult } from "@/types/action.type";
 import { CreateOrderItem, Order } from "@/types/order.type";
@@ -112,7 +113,39 @@ export async function updateOrder(order: Order): Promise<ActionResult<Order>> {
     return { data };
 }
 
+export async function getOrderByIdAsServiceRole(id: string): Promise<ActionResult<Order>> {
+    const supabase = await createServiceRoleClient();
+    const { data, error } = await supabase
+        .from("orders")
+        .select()
+        .eq("id", id)
+        .maybeSingle();
 
+    if (error) throw error;
+    if (!data) throw new Error("Order not found");
+
+    return { data };
+}
+
+export async function updateOrderAsServiceRole(order: Order): Promise<ActionResult<Order>> {
+    const supabase = await createServiceRoleClient();
+
+    const { data, error: oError } = await supabase
+        .from("orders")
+        .update({
+            total_amount: order.total_amount,
+            snap_token: order.snap_token,
+            status: order.status, 
+        })
+        .select()
+        .eq("id", order.id)
+        .maybeSingle();
+
+    if (oError) throw oError;
+    if (!data) throw new Error("Order not found");
+
+    return { data };
+}
 
 export async function initPayment(items: CartItem[], addr: ShippingAddress): Promise<{ token: string }> {
     const { data: { order } } = await createOrder(items, addr);
@@ -136,6 +169,7 @@ export async function initPayment(items: CartItem[], addr: ShippingAddress): Pro
             throw new Error(error.message);
         }
 
+        console.log(error)
         throw new Error("Cannot proccess transaction");
     }
 }

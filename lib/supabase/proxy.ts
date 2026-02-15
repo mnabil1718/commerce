@@ -46,11 +46,14 @@ export async function updateSession(request: NextRequest) {
   const { data } = await supabase.auth.getClaims();
   const user = data?.claims;
 
+  const isWebhook = request.nextUrl.pathname.startsWith("/api/webhooks/midtrans");
+
   const isPublicRoute = 
   request.nextUrl.pathname === "/" || 
   request.nextUrl.pathname.startsWith("/products") ||
   request.nextUrl.pathname.startsWith("/login") ||
-  request.nextUrl.pathname.startsWith("/auth");
+  request.nextUrl.pathname.startsWith("/auth") ||
+  isWebhook;
 
 if (!isPublicRoute && !user) {
   const url = request.nextUrl.clone();

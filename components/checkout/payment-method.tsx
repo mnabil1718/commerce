@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
 import useStore from "@/hooks/use-store";
@@ -15,7 +16,7 @@ import { useCartStore } from "@/providers/cart.provider";
 import { displayRupiah } from "@/utils/price";
 import { useShippingAddressStore } from "@/providers/shipping-address.provider";
 import { useState } from "react";
-import { createOrder, initPayment } from "@/service/order.service";
+import { initPayment } from "@/service/order.service";
 import { Loader2 } from "lucide-react";
 
 export function PaymentMethod() {
@@ -39,22 +40,22 @@ export function PaymentMethod() {
       const { token } = await initPayment(store.items, selected);
 
       // Trigger Snap Popup
-      window.snap.pay(token, {
-        onSuccess: (result) => {
-          console.log("success");
+      (window as any).snap.pay(token, {
+        onSuccess: (result: any) => {
+          console.log("success: ", result);
         },
-        onPending: (result) => {
-          console.log("pending");
+        onPending: (result: any) => {
+          console.log("pending: ", result);
         },
-        onError: (result) => {
-          console.log("error");
+        onError: (result: any) => {
+          console.log("error: ", result);
         },
         onClose: () => {
           console.log("customer closed the popup");
         },
       });
     } catch (e: unknown) {
-      alert("Failed to start payment");
+      console.error(e);
     } finally {
       setLoading(false);
     }

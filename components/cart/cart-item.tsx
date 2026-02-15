@@ -49,8 +49,8 @@ export function CartItemComponent({ item }: CartItemComponentProps) {
             </Button>
           </div>
 
-          <div className="flex items-center justify-between mt-auto pt-2">
-            <div className="flex items-center gap-2">
+          <div className="flex flex-wrap gap-3 items-center justify-between mt-auto pt-2">
+            <div className="flex items-center">
               <Quantity
                 init={item.qty}
                 max={item.stock}

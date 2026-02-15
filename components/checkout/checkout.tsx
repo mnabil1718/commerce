@@ -2,12 +2,13 @@
 
 import useStore from "@/hooks/use-store";
 import { useCartStore } from "@/providers/cart.provider";
-import { Button } from "./ui/button";
-import { EmptyCoffee } from "./empty-coffee";
+import { Button } from "../ui/button";
+import { EmptyCoffee } from "../empty-coffee";
 import Link from "next/link";
-import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
-import { ShippingAddressManager } from "./shipping-address/shipping-address-manager";
-import { CartItemComponent } from "./cart/cart-item";
+import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
+import { ShippingAddressManager } from "../shipping-address/shipping-address-manager";
+import { CartItemComponent } from "../cart/cart-item";
+import { PaymentMethod } from "./payment-method";
 
 export function Checkout() {
   const store = useStore(useCartStore, (state) => state);
@@ -38,24 +39,24 @@ export function Checkout() {
           <ShippingAddressManager />
           <Card>
             <CardHeader>
-              <CardTitle>Ordered Items</CardTitle>
+              <CardTitle>Review Your Order</CardTitle>
             </CardHeader>
             <CardContent>
-              {store.items.length > 0 &&
-                store.items.map((item) => {
-                  return (
-                    <CartItemComponent key={item.product_id} item={item} />
-                  );
-                })}
+              <div className="flex flex-col gap-5">
+                {store.items.length > 0 &&
+                  store.items.map((item) => {
+                    return (
+                      <CartItemComponent key={item.product_id} item={item} />
+                    );
+                  })}
+              </div>
             </CardContent>
           </Card>
         </div>
 
-        <Card className="col-span-3 md:col-span-1">
-          <CardHeader>
-            <CardTitle>Payment Method</CardTitle>
-          </CardHeader>
-        </Card>
+        <div className="col-span-3 md:col-span-1">
+          <PaymentMethod />
+        </div>
       </div>
     );
   }

@@ -1,0 +1,84 @@
+"use server";
+
+import { createClient } from "@/lib/supabase/server";
+import { CartItem } from "@/stores/cart-store";
+import { CreateOrderItem } from "@/types/order.type";
+import { ShippingAddress } from "@/types/shipping-address.type";
+
+export async function createOrder(items: CartItem[], addr: ShippingAddress): Promise<void> {
+
+    const supabase = await createClient();
+
+    // user handling
+    const { data: { user }, error } = await supabase.auth.getUser();
+    if (error) throw error;
+    if (!user) throw new Error("Action not allowed");
+
+
+    // order item handling & verification
+    const productIds = items.map(i => i.product_id);
+    const { data: pData, error: pError } = await supabase.from("products").select().in("id", productIds);
+
+    if (pError) throw pError;
+    if (!pData) throw new Error("Cannot verify products");
+
+
+    const order_items: CreateOrderItem[] = [];
+    for (const p of pData) {
+        const pCart = items.find(i => i.product_id === p.id);
+        if (!pCart) throw new Error("product not found");
+        if (pCart.qty > p.stock) throw new Error("insufficient stock");
+        order_items.push({ image: p.image, price: p.price, product_id: p.id, quantity: pCart.qty, title: p.title  });
+    }
+
+    const total = order_items.reduce((agg, curr) => {
+        return agg + (curr.price * curr.quantity);
+    }, 0);
+
+    const safeTotal = Math.round(total * 100) / 100; // fixed 2 decimal point
+
+
+    // order creation
+    const { data: order, error: oError } = await supabase.from("orders").insert({
+        user_id: user.id,
+        total_amount: safeTotal,
+    }).select().single();
+    if (oError) throw oError;
+    if (!order) throw new Error("no order returned");
+
+    // order items creation
+    const { error: oiError } = await supabase
+        .from("order_items")
+        .insert(
+            order_items.map((o) => ({
+                order_id: order.id,
+                product_id: o.product_id,
+                image: o.image,
+                title: o.title,
+                quantity: o.quantity,
+                price: o.price,
+            }))
+        );
+
+    if (oiError) throw oiError;
+
+    // address verification
+    const { data: address, error: aError } = await supabase.from("shipping_addresses").select().eq("id", addr.id).single();
+    if (aError) throw aError;
+    if (!address) throw new Error("address not found");
+
+    // order address creation
+    const { error: oaError } = await supabase.from("order_addresses").insert({
+        order_id: order.id,
+        address_line1: address.address_line1,
+        address_line2: address.address_line2 || "",
+        label: address.label,
+        city: address.city,
+        country: address.country,
+        postal_code: address.postal_code,
+        phone: address.phone,
+        state: address.state,
+    });
+
+    if (oaError) throw oaError;
+}

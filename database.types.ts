@@ -62,27 +62,83 @@ export type Database = {
         }
         Relationships: []
       }
+      order_addresses: {
+        Row: {
+          address_line1: string
+          address_line2: string | null
+          city: string
+          country: string
+          created_at: string | null
+          id: string
+          label: string | null
+          order_id: string | null
+          phone: string | null
+          postal_code: string
+          state: string | null
+        }
+        Insert: {
+          address_line1: string
+          address_line2?: string | null
+          city: string
+          country: string
+          created_at?: string | null
+          id?: string
+          label?: string | null
+          order_id?: string | null
+          phone?: string | null
+          postal_code: string
+          state?: string | null
+        }
+        Update: {
+          address_line1?: string
+          address_line2?: string | null
+          city?: string
+          country?: string
+          created_at?: string | null
+          id?: string
+          label?: string | null
+          order_id?: string | null
+          phone?: string | null
+          postal_code?: string
+          state?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "order_addresses_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       order_items: {
         Row: {
           id: number
-          order_id: string | null
-          price_at_purchase: number
+          image: string | null
+          order_id: string
+          price: number
           product_id: number | null
           quantity: number
+          title: string
         }
         Insert: {
           id?: number
-          order_id?: string | null
-          price_at_purchase: number
+          image?: string | null
+          order_id: string
+          price: number
           product_id?: number | null
           quantity: number
+          title: string
         }
         Update: {
           id?: number
-          order_id?: string | null
-          price_at_purchase?: number
+          image?: string | null
+          order_id?: string
+          price?: number
           product_id?: number | null
           quantity?: number
+          title?: string
         }
         Relationships: [
           {
@@ -105,27 +161,24 @@ export type Database = {
         Row: {
           created_at: string | null
           id: string
-          shipping_address: string | null
           snap_token: string | null
-          status: string | null
+          status: string
           total_amount: number
           user_id: string | null
         }
         Insert: {
           created_at?: string | null
           id?: string
-          shipping_address?: string | null
           snap_token?: string | null
-          status?: string | null
+          status?: string
           total_amount: number
           user_id?: string | null
         }
         Update: {
           created_at?: string | null
           id?: string
-          shipping_address?: string | null
           snap_token?: string | null
-          status?: string | null
+          status?: string
           total_amount?: number
           user_id?: string | null
         }

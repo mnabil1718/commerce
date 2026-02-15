@@ -5,7 +5,7 @@ import { createClient } from "@/lib/supabase/server";
 import { createServiceRoleClient } from "@/lib/supabase/service-role";
 import { CartItem } from "@/stores/cart-store";
 import { ActionResult } from "@/types/action.type";
-import { CreateOrderItem, Order } from "@/types/order.type";
+import { CreateOrderItem, Order, OrderWithRelation } from "@/types/order.type";
 import { ShippingAddress } from "@/types/shipping-address.type";
 
 export async function createOrder(items: CartItem[], addr: ShippingAddress): Promise<ActionResult<{ 
@@ -48,7 +48,7 @@ export async function createOrder(items: CartItem[], addr: ShippingAddress): Pro
     // order creation
     const { data: order, error: oError } = await supabase.from("orders").insert({
         user_id: user.id,
-        status: "pending_payment",
+        status: "pending payment",
         total_amount: safeTotal,
     }).select().single();
     if (oError) throw oError;
@@ -133,6 +133,7 @@ export async function updateOrderAsServiceRole(order: Order): Promise<ActionResu
     const { data, error: oError } = await supabase
         .from("orders")
         .update({
+            payment_method: order.payment_method,
             total_amount: order.total_amount,
             snap_token: order.snap_token,
             status: order.status, 
@@ -147,7 +148,7 @@ export async function updateOrderAsServiceRole(order: Order): Promise<ActionResu
     return { data };
 }
 
-export async function initPayment(items: CartItem[], addr: ShippingAddress): Promise<{ token: string }> {
+export async function initPayment(items: CartItem[], addr: ShippingAddress): Promise<{ token: string, order: Order }> {
     const { data: { order } } = await createOrder(items, addr);
 
     const parameter = {
@@ -162,14 +163,34 @@ export async function initPayment(items: CartItem[], addr: ShippingAddress): Pro
 
         await updateOrder({ ...order, snap_token: transaction.token })
 
-        return { token: transaction.token };
+        return { token: transaction.token, order };
 
     } catch (error: unknown) {
         if (error instanceof Error) {
             throw new Error(error.message);
         }
 
-        console.log(error)
         throw new Error("Cannot proccess transaction");
     }
+}
+
+export async function getOrderByIdWithRelations(id: string): Promise<ActionResult<OrderWithRelation>> {
+  const supabase = await createClient();
+
+  const { data, error } = await supabase
+    .from("orders")
+    .select(`
+      *,
+      order_items (*),
+      order_addresses (*)
+    `)
+    .eq("id", id)
+    .maybeSingle();
+
+  if (error) throw error;
+
+  if (!data) throw new Error("Order not found");
+
+
+  return { data };
 }

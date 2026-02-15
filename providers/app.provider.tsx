@@ -1,4 +1,3 @@
-import { Toaster } from "sonner";
 import { ThemeProvider } from "next-themes";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuthStoreProvider } from "./auth.provider";
@@ -6,6 +5,7 @@ import { createClient } from "@/lib/supabase/server";
 import { CartStoreProvider } from "./cart.provider";
 import { ShippingAddressStoreProvider } from "./shipping-address.provider";
 import { getShippingAddresses } from "@/service/shipping-address.service";
+import { Toaster } from "@/components/toaster";
 
 export async function AppProvider({ children }: { children: React.ReactNode }) {
   const supabase = await createClient();
@@ -18,7 +18,7 @@ export async function AppProvider({ children }: { children: React.ReactNode }) {
   return (
     <ThemeProvider
       attribute="class"
-      defaultTheme="system"
+      defaultTheme="light"
       enableSystem
       disableTransitionOnChange
     >

@@ -18,8 +18,13 @@ import { useShippingAddressStore } from "@/providers/shipping-address.provider";
 import { useState } from "react";
 import { initPayment } from "@/service/order.service";
 import { Loader2 } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+import { useAuthStore } from "@/providers/auth.provider";
 
 export function PaymentMethod() {
+  const router = useRouter();
+  const user = useAuthStore((state) => state.user);
   const store = useStore(useCartStore, (state) => state);
   const [loading, setLoading] = useState<boolean>(false);
   const { addresses, getPrimary, selectedAddress } = useShippingAddressStore(
@@ -37,32 +42,34 @@ export function PaymentMethod() {
     setLoading(true);
 
     try {
-      const { token } = await initPayment(store.items, selected);
+      const { token, order } = await initPayment(store.items, selected);
 
       // Trigger Snap Popup
       (window as any).snap.pay(token, {
-        onSuccess: (result: any) => {
-          console.log("success: ", result);
+        onSuccess: () => {
+          store.reset(user?.id || undefined);
+          router.push(`/orders/${order.id}`);
+          return;
         },
-        onPending: (result: any) => {
-          console.log("pending: ", result);
-        },
+        onPending: () => {},
         onError: (result: any) => {
-          console.log("error: ", result);
+          toast.error(result.error_mesasge);
         },
-        onClose: () => {
-          console.log("customer closed the popup");
-        },
+        onClose: () => {},
       });
     } catch (e: unknown) {
-      console.error(e);
+      if (e instanceof Error) {
+        return toast.error(e.message);
+      }
+
+      toast.error("Cannot process transaction");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <Card>
+    <Card className="sticky top-20">
       <CardHeader>
         <CardTitle>Payment Method</CardTitle>
       </CardHeader>

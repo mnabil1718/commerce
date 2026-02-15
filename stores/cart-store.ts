@@ -48,7 +48,7 @@ export type CartActions = {
   addItem: (product: Product, qty: number) => void;
   removeItem: (productId: number) => void;
   updateQuantity: (productId: number, quantity: number) => void;
-  reset: () => void;
+  reset: (userId?: string) => void;
   getTotalPrice: () => number;
   getTotalItems: () => number;
   getSubtotal: (productId: number) => number;
@@ -107,7 +107,13 @@ export const createCartStore = (
         },
 
         // clear
-        reset: () => set(defaultInitState),
+        reset: async (userId?: string) => {
+          set({ items: [], isLoaded: true });
+
+          if (userId) {
+            await saveCart(userId, []);
+          }
+        },
 
         // get cart total price
         getTotalPrice: () => get().items.reduce((total, item) => total + item.price * item.qty, 0),

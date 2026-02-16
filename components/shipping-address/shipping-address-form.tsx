@@ -23,6 +23,7 @@ export function ShippingAddressForm({ submitted }: ShippingAddressFormProps) {
     resolver: zodResolver(ShippingAddressFormSchema),
     mode: "onSubmit",
     defaultValues: {
+      full_name: "",
       label: "",
       phone: "",
       address_line1: "",
@@ -91,6 +92,21 @@ export function ShippingAddressForm({ submitted }: ShippingAddressFormProps) {
                 type="tel"
                 placeholder="08xxxxxxxxxx"
               />
+              {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
+            </Field>
+          )}
+        />
+
+        {/* Recipient's Name */}
+        <Controller
+          name="full_name"
+          control={form.control}
+          render={({ field, fieldState }) => (
+            <Field data-invalid={fieldState.invalid} className="col-span-2">
+              <FieldLabel htmlFor="full_name" className="gap-1">
+                Recipient Name <Required />
+              </FieldLabel>
+              <Input {...field} id="full_name" placeholder="John Doe" />
               {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
             </Field>
           )}

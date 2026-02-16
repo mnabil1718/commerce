@@ -13,3 +13,7 @@ export type OrderWithRelation = Order & {
   order_items: OrderItem[];
   order_addresses: OrderAddress[];
 };
+
+
+export type OrderStatus = "unfulfilled" | "request cancellation" | "cancelled" | "shipping" | "completed";
+export type OrderPaymentStatus = "waiting payment" | "pending" | "paid" | "failed";

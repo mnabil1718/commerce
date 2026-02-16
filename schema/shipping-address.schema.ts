@@ -1,6 +1,7 @@
 import z from "zod";
 
 export const ShippingAddressFormSchema = z.object({
+    full_name: z.string().min(1, "Name cannot be empty").max(75, "Name cannot exceeds 75 characters"),
     label: z.string().min(1, "Label cannot be empty"),
     phone: z.string().min(1, "Phone cannot be empty"),
     address_line1: z.string().min(1, "Street name cannot be empty").max(350),

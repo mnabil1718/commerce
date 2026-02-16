@@ -48,7 +48,8 @@ export async function createOrder(items: CartItem[], addr: ShippingAddress): Pro
     // order creation
     const { data: order, error: oError } = await supabase.from("orders").insert({
         user_id: user.id,
-        status: "pending payment",
+        status: "unfulfilled",
+        payment_status: "waiting payment",
         total_amount: safeTotal,
     }).select().single();
     if (oError) throw oError;
@@ -86,6 +87,7 @@ export async function createOrder(items: CartItem[], addr: ShippingAddress): Pro
         postal_code: address.postal_code,
         phone: address.phone,
         state: address.state,
+        full_name: address.full_name,
     });
 
     if (oaError) throw oaError;
@@ -136,6 +138,7 @@ export async function updateOrderAsServiceRole(order: Order): Promise<ActionResu
             payment_method: order.payment_method,
             total_amount: order.total_amount,
             snap_token: order.snap_token,
+            payment_status: order.payment_status,
             status: order.status, 
         })
         .select()

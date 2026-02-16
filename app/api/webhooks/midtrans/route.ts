@@ -29,7 +29,7 @@ export async function POST(request: Request) {
     }
 
     const { data: order } = await getOrderByIdAsServiceRole(order_id);
-    await updateOrderAsServiceRole({ ...order, status, payment_method: payment_type });
+    await updateOrderAsServiceRole({ ...order, payment_status: status, payment_method: payment_type });
     return NextResponse.json({ status: 'ok' }, { status: 200 });
 
   } catch (error: unknown) {

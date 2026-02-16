@@ -28,9 +28,8 @@ export async function CategoriesSection() {
                       <Image
                         src={c.image}
                         alt={c.title}
-                        width={120}
-                        height={120}
-                        className="w-full h-full object-cover"
+                        fill
+                        className="object-cover"
                       />
                     )}
                   </div>{" "}

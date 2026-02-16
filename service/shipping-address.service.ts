@@ -34,6 +34,7 @@ export async function createShippingAddress(addr: ShippingAddressFormSchemaType)
         postal_code: addr.postal_code,
         country: addr.country,
         is_primary: addr.is_primary,
+        full_name: addr.full_name,
     }).select().single();
 
     if (addrError) throw addrError;
@@ -55,6 +56,7 @@ export async function updateShippingAddress(id: string, addr: ShippingAddressFor
         postal_code: addr.postal_code,
         country: addr.country,
         is_primary: addr.is_primary,
+        full_name: addr.full_name,
     }).eq("id", id).select().single();
 
     if (addrError) throw addrError;

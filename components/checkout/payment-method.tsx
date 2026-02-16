@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
@@ -40,28 +41,31 @@ export function PaymentMethod() {
 
   const pay = async () => {
     setLoading(true);
-
     try {
       const { token, order } = await initPayment(store.items, selected);
 
       // Trigger Snap Popup
       (window as any).snap.pay(token, {
-        onSuccess: () => {
+        onSuccess: (result: any) => {
           store.reset(user?.id || undefined);
           router.push(`/orders/${order.id}`);
-          return;
         },
-        onPending: () => {},
+        onPending: (result: any) => {
+          store.reset(user?.id || undefined);
+          router.push(`/orders/${order.id}`);
+        },
         onError: (result: any) => {
-          toast.error(result.error_mesasge);
+          toast.error(result.error_message);
         },
-        onClose: () => {},
+        onClose: () => {
+          store.reset(user?.id || undefined);
+          router.push(`/orders/${order.id}`);
+        },
       });
     } catch (e: unknown) {
       if (e instanceof Error) {
         return toast.error(e.message);
       }
-
       toast.error("Cannot process transaction");
     } finally {
       setLoading(false);
@@ -69,7 +73,7 @@ export function PaymentMethod() {
   };
 
   return (
-    <Card className="sticky top-20">
+    <Card className="sticky top-28">
       <CardHeader>
         <CardTitle>Payment Method</CardTitle>
       </CardHeader>

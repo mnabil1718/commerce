@@ -69,6 +69,7 @@ export type Database = {
           city: string
           country: string
           created_at: string | null
+          full_name: string
           id: string
           label: string | null
           order_id: string | null
@@ -82,6 +83,7 @@ export type Database = {
           city: string
           country: string
           created_at?: string | null
+          full_name: string
           id?: string
           label?: string | null
           order_id?: string | null
@@ -95,6 +97,7 @@ export type Database = {
           city?: string
           country?: string
           created_at?: string | null
+          full_name?: string
           id?: string
           label?: string | null
           order_id?: string | null
@@ -159,27 +162,33 @@ export type Database = {
       }
       orders: {
         Row: {
-          created_at: string | null
+          created_at: string
           id: string
+          order_number: number
           payment_method: string | null
+          payment_status: string
           snap_token: string | null
           status: string
           total_amount: number
           user_id: string | null
         }
         Insert: {
-          created_at?: string | null
+          created_at?: string
           id?: string
+          order_number?: never
           payment_method?: string | null
+          payment_status?: string
           snap_token?: string | null
           status?: string
           total_amount: number
           user_id?: string | null
         }
         Update: {
-          created_at?: string | null
+          created_at?: string
           id?: string
+          order_number?: never
           payment_method?: string | null
+          payment_status?: string
           snap_token?: string | null
           status?: string
           total_amount?: number
@@ -291,6 +300,7 @@ export type Database = {
           city: string
           country: string
           created_at: string | null
+          full_name: string
           id: string
           is_primary: boolean | null
           label: string | null
@@ -306,6 +316,7 @@ export type Database = {
           city: string
           country: string
           created_at?: string | null
+          full_name: string
           id?: string
           is_primary?: boolean | null
           label?: string | null
@@ -321,6 +332,7 @@ export type Database = {
           city?: string
           country?: string
           created_at?: string | null
+          full_name?: string
           id?: string
           is_primary?: boolean | null
           label?: string | null

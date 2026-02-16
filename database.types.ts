@@ -194,7 +194,15 @@ export type Database = {
           total_amount?: number
           user_id?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "orders_user_id_fkey1"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       product_images: {
         Row: {
@@ -277,19 +285,19 @@ export type Database = {
           avatar: string | null
           full_name: string
           id: string
-          role: string | null
+          role: string
         }
         Insert: {
           avatar?: string | null
           full_name: string
           id: string
-          role?: string | null
+          role?: string
         }
         Update: {
           avatar?: string | null
           full_name?: string
           id?: string
-          role?: string | null
+          role?: string
         }
         Relationships: []
       }

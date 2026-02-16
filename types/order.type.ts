@@ -14,6 +14,17 @@ export type OrderWithRelation = Order & {
   order_addresses: OrderAddress[];
 };
 
+export type AdminOrderWithRelation = Order & {
+  order_user: {
+    id: string;
+    role: string;
+    full_name: string;
+    avatar: string | null;
+  } | null;
+  order_items: OrderItem[];
+  order_addresses: OrderAddress[];
+};
+
 
 export type OrderStatus = "unfulfilled" | "request cancellation" | "cancelled" | "shipping" | "completed";
 export type OrderPaymentStatus = "waiting payment" | "pending" | "paid" | "failed";

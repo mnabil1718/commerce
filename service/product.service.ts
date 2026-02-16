@@ -129,8 +129,6 @@ export async function getProductsWithoutRelation({
   return { data };
 }
 
-
-
 export async function getProductById(id: number): Promise<ActionResult<Product>> {
     const supabase = await createClient();
     const { data, error } = await supabase.from("products").select().eq("id", id).single();
@@ -161,7 +159,6 @@ export async function getProductBySlug(
 
   return { data };
 }
-
 
 export async function getSingleLatestProduct(): Promise<ActionResult<Product>> {
     const supabase = await createClient();

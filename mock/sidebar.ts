@@ -1,4 +1,4 @@
-import { Component, Package, Receipt } from "lucide-react";
+import { Component, Package, WalletCards } from "lucide-react";
 
 export const navData = [
   {
@@ -13,8 +13,8 @@ export const navData = [
   },
   {
     title: "Orders",
-    url: "#",
-    icon: Receipt,
+    url: "/admin/orders",
+    icon: WalletCards,
   },
 
 ];

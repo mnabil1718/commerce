@@ -28,7 +28,6 @@ export function ProductActionCell({ row }: { row: Row<ProductWithCategory> }) {
   };
 
   return (
-    // 3. Pass open and onOpenChange to the DropdownMenu
     <DropdownMenu open={open} onOpenChange={setOpen}>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" className="h-8 w-8 p-0">

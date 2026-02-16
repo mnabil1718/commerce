@@ -48,17 +48,18 @@ export function PaymentStatus({ order }: { order: Order }) {
 
   return (
     <>
-      {order.payment_status === "waiting payment" && (
-        <div className="flex justify-between w-full">
-          <Button
-            size={"sm"}
-            onClick={pay}
-            className="font-medium rounded-full w-full"
-          >
-            Pay Now
-          </Button>
-        </div>
-      )}
+      {order.payment_status === "waiting payment" &&
+        order.status !== "cancelled" && (
+          <div className="flex justify-between w-full">
+            <Button
+              size={"sm"}
+              onClick={pay}
+              className="font-medium rounded-full w-full"
+            >
+              Pay Now
+            </Button>
+          </div>
+        )}
 
       <div className="flex justify-between">
         <span className="font-medium">Payment Status</span>

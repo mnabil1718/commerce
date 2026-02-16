@@ -5,7 +5,7 @@ import { createClient } from "@/lib/supabase/server";
 import { createServiceRoleClient } from "@/lib/supabase/service-role";
 import { CartItem } from "@/stores/cart-store";
 import { ActionResult } from "@/types/action.type";
-import { CreateOrderItem, Order, OrderWithRelation } from "@/types/order.type";
+import { AdminOrderWithRelation, CreateOrderItem, Order, OrderWithRelation } from "@/types/order.type";
 import { ShippingAddress } from "@/types/shipping-address.type";
 
 export async function createOrder(items: CartItem[], addr: ShippingAddress): Promise<ActionResult<{ 
@@ -231,4 +231,42 @@ export async function getOrdersWithRelation(): Promise<ActionResult<OrderWithRel
     if (error) throw error;
 
     return { data: data || [] }
+}
+
+export async function getOrdersWithRelationAsServiceRoleForAdmin(): Promise<ActionResult<AdminOrderWithRelation[]>> {
+    const supabase = await createServiceRoleClient();
+
+    const { data, error } = await supabase
+      .from("orders")
+      .select(`
+        *,
+        order_user:profiles (*),
+        order_items (*),
+        order_addresses (*)
+      `)
+      .order("created_at", { ascending: false });
+
+    if (error) throw error;
+
+    return { data: data || [] };
+}
+
+export async function getOrderWithRelationByIdAsServiceRoleForAdmin(id: string): Promise<ActionResult<AdminOrderWithRelation>> {
+    const supabase = await createServiceRoleClient();
+
+    const { data, error } = await supabase
+      .from("orders")
+      .select(`
+        *,
+        order_user:profiles (*),
+        order_items (*),
+        order_addresses (*)
+      `)
+      .eq("id", id)
+      .maybeSingle()
+
+    if (error) throw error;
+    if (!data) throw new Error("Order not found");
+
+    return { data };
 }

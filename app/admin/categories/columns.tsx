@@ -16,15 +16,9 @@ export const columns: ColumnDef<Category>[] = [
       const image: string | null = row.getValue("image");
       const title: string = row.getValue("title");
       return (
-        <div className="relative w-20 aspect-square bg-secondary/20 rounded-lg overflow-hidden">
+        <div className="relative w-20 h-20 aspect-square bg-secondary/20 rounded-lg overflow-hidden">
           {image && (
-            <Image
-              src={image}
-              alt={title}
-              className="w-full h-full object-cover"
-              sizes="80px"
-              fill
-            />
+            <Image src={image} alt={title} className="object-cover" fill />
           )}
         </div>
       );

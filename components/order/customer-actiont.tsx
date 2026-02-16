@@ -9,6 +9,7 @@ import { updateOrder } from "@/service/order.service";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { DeleteDialog } from "../delete-dialog";
+import { ConfirmDialog } from "../confirm-dialog";
 
 export function CustomerAction({ order }: { order: Order }) {
   const router = useRouter();
@@ -65,12 +66,16 @@ export function CustomerAction({ order }: { order: Order }) {
             </TooltipContent>
           </Tooltip>
         </div>
-        <Button
-          onClick={requestComplete}
-          disabled={order.status !== "shipping" || loading}
-        >
-          {loading ? "Processing..." : "Complete Order"}
-        </Button>
+        <ConfirmDialog
+          confirmCallback={requestComplete}
+          buttonText="Confirm"
+          text="This action will update order status to completed. Make sure you already received your products. Do you wish to continue?"
+          trigger={
+            <Button disabled={order.status !== "shipping" || loading}>
+              {loading ? "Processing..." : "Complete Order"}
+            </Button>
+          }
+        />
       </CardContent>
     </Card>
   );

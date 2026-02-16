@@ -1,29 +1,38 @@
-import { redirect } from "next/navigation";
+import { DashboardHero } from "@/components/dashboard/dashboard-hero";
+import { MyOrderList } from "@/components/order/my-order-list";
 
 import { createClient } from "@/lib/supabase/server";
-import { Suspense } from "react";
+import { getOrdersWithRelation } from "@/service/order.service";
+import { getUserFavoriteAsServiceRole } from "@/service/product.service";
+import { OrderWithRelation } from "@/types/order.type";
 
-async function UserDetails() {
-  const supabase = await createClient();
-  const { data, error } = await supabase.auth.getClaims();
-
-  if (error || !data?.claims) {
-    redirect("/auth/login");
-  }
-
-  return JSON.stringify(data.claims, null, 2);
+async function getUsersOrders(limit?: number): Promise<OrderWithRelation[]> {
+  const { data: orders } = await getOrdersWithRelation(limit);
+  return orders;
 }
 
-export default function DashboardPage() {
+async function getFavourite() {
+  const supabase = await createClient();
+  const {
+    data: { user },
+    error,
+  } = await supabase.auth.getUser();
+
+  if (error) throw error;
+
+  return getUserFavoriteAsServiceRole(user?.id || "0");
+}
+
+export default async function DashboardPage() {
+  const orders = await getUsersOrders();
+  const product = await getFavourite();
+
   return (
-    <div className="grid grid-cols-2 gap-5 p-5">
-      <div className="flex flex-col gap-2 items-start">
-        <h2 className="font-bold text-2xl mb-4">Your user details</h2>
-        <pre className="text-xs font-mono p-3 rounded border max-h-32 overflow-auto">
-          <Suspense>
-            <UserDetails />
-          </Suspense>
-        </pre>
+    <div className="grid grid-cols-2 gap-5">
+      <DashboardHero product={product} orders={orders} />
+
+      <div className="col-span-2 grid grid-cols-1 gap-5">
+        <MyOrderList orders={orders} />
       </div>
     </div>
   );

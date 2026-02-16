@@ -7,7 +7,7 @@ import { ShippingAddress, ShippingAddressFormSchemaType } from "@/types/shipping
 export async function getShippingAddresses(): Promise<ActionResult<ShippingAddress[]>> {
     const supabase = await createClient();
 
-    const {data, error} = await supabase.from("shipping_addresses").select();
+    const {data, error} = await supabase.from("shipping_addresses").select().order("created_at", { ascending: false });
 
     if (error) throw error;
 

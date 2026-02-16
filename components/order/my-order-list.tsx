@@ -87,7 +87,7 @@ export function MyOrderList({ orders }: { orders: OrderWithRelation[] }) {
     <>
       <div className="flex flex-wrap justify-between items-end">
         <Select value={status} onValueChange={(val) => setStatus(val as any)}>
-          <SelectTrigger className="w-50 capitalize">
+          <SelectTrigger className="w-50 capitalize rounded-full">
             <SelectValue placeholder="Select status" />
           </SelectTrigger>
           <SelectContent>

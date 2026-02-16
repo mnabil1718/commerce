@@ -4,7 +4,10 @@ import { Controller, FormProvider, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { ShippingAddressFormSchema } from "@/schema/shipping-address.schema";
-import { ShippingAddressFormSchemaType } from "@/types/shipping-address.type";
+import {
+  ShippingAddress,
+  ShippingAddressFormSchemaType,
+} from "@/types/shipping-address.type";
 import { Field, FieldError, FieldLabel } from "../ui/field";
 import { Required } from "../form/required";
 import { Input } from "../ui/input";
@@ -15,35 +18,39 @@ import { useShippingAddressStore } from "@/providers/shipping-address.provider";
 
 export type ShippingAddressFormProps = {
   submitted?: () => void;
+  initialData: ShippingAddress;
 };
 
-export function ShippingAddressForm({ submitted }: ShippingAddressFormProps) {
-  const { add, getPrimary } = useShippingAddressStore((state) => state);
+const getInitialData = (
+  data: ShippingAddress,
+): ShippingAddressFormSchemaType => {
+  return {
+    full_name: data.full_name,
+    label: data.label,
+    phone: data.phone,
+    address_line1: data.address_line1,
+    address_line2: data?.address_line2 ?? "",
+    city: data.city,
+    state: data.state,
+    postal_code: data.postal_code,
+    country: data.country,
+    is_primary: data.is_primary,
+  };
+};
+
+export function EditShippingAddressForm({
+  submitted,
+  initialData,
+}: ShippingAddressFormProps) {
+  const { update } = useShippingAddressStore((state) => state);
   const form = useForm<ShippingAddressFormSchemaType>({
     resolver: zodResolver(ShippingAddressFormSchema),
     mode: "onSubmit",
-    defaultValues: {
-      full_name: "",
-      label: "",
-      phone: "",
-      address_line1: "",
-      address_line2: "",
-      city: "",
-      state: "",
-      postal_code: "",
-      country: "",
-      is_primary: false,
-    },
+    defaultValues: getInitialData(initialData),
   });
 
   const onSubmit = async (data: ShippingAddressFormSchemaType) => {
-    const primary = getPrimary();
-
-    if (!primary) {
-      add({ ...data, is_primary: true });
-    } else {
-      add(data);
-    }
+    update(initialData.id, data);
 
     if (submitted) submitted();
   };

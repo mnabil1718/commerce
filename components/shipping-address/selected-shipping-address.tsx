@@ -6,7 +6,7 @@ import {
   ItemMedia,
   ItemTitle,
 } from "@/components/ui/item";
-import { MapPin, Plus } from "lucide-react";
+import { MapPin, Plus, Settings } from "lucide-react";
 import { Button } from "../ui/button";
 import { useShippingAddressStore } from "@/providers/shipping-address.provider";
 import { constructFullAddress } from "@/utils/address";
@@ -31,6 +31,7 @@ import {
 import { AddShippingAddressDialog } from "./shipping-address-dialog";
 import { Badge } from "../ui/badge";
 import { useState } from "react";
+import Link from "next/link";
 
 export function SelectedShippingAddress() {
   const { getPrimary, addresses, selectedAddress, setSelected } =
@@ -68,6 +69,14 @@ export function SelectedShippingAddress() {
               <DialogDescription></DialogDescription>
             </DialogHeader>
             <div className="no-scrollbar -mx-4 max-h-[50vh] overflow-y-auto space-y-3 px-5">
+              <div className="flex justify-end">
+                <Link href={"/profile"}>
+                  <Button variant={"link"} className="text-foreground">
+                    Manage
+                    <Settings className="size-3.5" />
+                  </Button>
+                </Link>
+              </div>
               <AddShippingAddressDialog>
                 <Button variant={"outline"} className="w-full">
                   <Plus /> Add New Address

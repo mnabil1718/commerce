@@ -8,27 +8,41 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "../ui/dialog";
-import { ShippingAddressForm } from "./shipping-address-form";
+import { ShippingAddress } from "@/types/shipping-address.type";
+import { EditShippingAddressForm } from "./edit-shipping-address-form";
 
-export type AddShippingAddressDialogProps = {
+export type EditShippingAddressDialogProps = {
   children: React.ReactNode;
+  initData: ShippingAddress;
+  afterSubmit?: () => void;
 };
 
-export function AddShippingAddressDialog({
+export function EditShippingAddressDialog({
   children,
-}: AddShippingAddressDialogProps) {
+  initData,
+  afterSubmit,
+}: EditShippingAddressDialogProps) {
   const [open, setOpen] = useState<boolean>(false);
+
+  const submitted = () => {
+    setOpen(false);
+
+    if (afterSubmit) afterSubmit();
+  };
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Add New Shipping Address</DialogTitle>
+          <DialogTitle>Edit Shipping Address</DialogTitle>
           <DialogDescription></DialogDescription>
         </DialogHeader>
         <div className="no-scrollbar max-h-[80vh] overflow-y-auto p-1">
-          <ShippingAddressForm submitted={() => setOpen(false)} />
+          <EditShippingAddressForm
+            initialData={initData}
+            submitted={submitted}
+          />
         </div>
       </DialogContent>
     </Dialog>

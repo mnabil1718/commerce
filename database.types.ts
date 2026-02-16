@@ -307,15 +307,15 @@ export type Database = {
           address_line2: string | null
           city: string
           country: string
-          created_at: string | null
+          created_at: string
           full_name: string
           id: string
-          is_primary: boolean | null
-          label: string | null
-          phone: string | null
+          is_primary: boolean
+          label: string
+          phone: string
           postal_code: string
-          state: string | null
-          updated_at: string | null
+          state: string
+          updated_at: string
           user_id: string
         }
         Insert: {
@@ -323,15 +323,15 @@ export type Database = {
           address_line2?: string | null
           city: string
           country: string
-          created_at?: string | null
+          created_at?: string
           full_name: string
           id?: string
-          is_primary?: boolean | null
-          label?: string | null
-          phone?: string | null
+          is_primary?: boolean
+          label: string
+          phone: string
           postal_code: string
-          state?: string | null
-          updated_at?: string | null
+          state: string
+          updated_at?: string
           user_id: string
         }
         Update: {
@@ -339,15 +339,15 @@ export type Database = {
           address_line2?: string | null
           city?: string
           country?: string
-          created_at?: string | null
+          created_at?: string
           full_name?: string
           id?: string
-          is_primary?: boolean | null
-          label?: string | null
-          phone?: string | null
+          is_primary?: boolean
+          label?: string
+          phone?: string
           postal_code?: string
-          state?: string | null
-          updated_at?: string | null
+          state?: string
+          updated_at?: string
           user_id?: string
         }
         Relationships: []
@@ -358,6 +358,26 @@ export type Database = {
     }
     Functions: {
       decrease_product_stocks: { Args: { items: Json }; Returns: undefined }
+      get_most_ordered_product: {
+        Args: { target_user_id: string }
+        Returns: {
+          category_id: number
+          created_at: string
+          description: string
+          id: number
+          image: string | null
+          price: number
+          slug: string
+          stock: number
+          title: string
+        }[]
+        SetofOptions: {
+          from: "*"
+          to: "products"
+          isOneToOne: false
+          isSetofReturn: true
+        }
+      }
       is_admin: { Args: never; Returns: boolean }
     }
     Enums: {

@@ -12,7 +12,7 @@ export function MyOrderItem({ order }: { order: OrderWithRelation }) {
   const firstItem = order.order_items[0];
   return (
     <Card>
-      <CardHeader className="border-b pb-0 gap-0">
+      <CardHeader className="pb-0 gap-0">
         <div className="flex flex-wrap w-full items-start justify-between">
           <div className="flex flex-col gap-2">
             <div className="flex items-center gap-2">
@@ -25,7 +25,9 @@ export function MyOrderItem({ order }: { order: OrderWithRelation }) {
             </span>
           </div>
           <Link href={`/orders/${order.id}`}>
-            <Button variant={"ghost"}>View Detail</Button>
+            <Button variant={"ghost"} className="rounded-full">
+              View Detail
+            </Button>
           </Link>
         </div>
       </CardHeader>

@@ -206,3 +206,15 @@ export async function decreaseMultipleProductStockAsServiceRole(
   if (error) throw error;
 }
 
+export async function getUserFavoriteAsServiceRole(userId: string): Promise<Product | undefined> {
+  const supabase = await createServiceRoleClient();
+  const { data, error } = await supabase
+    .rpc('get_most_ordered_product', { 
+      target_user_id: userId 
+    });
+
+  if (error) throw error;
+
+  return data?.[0];
+}
+

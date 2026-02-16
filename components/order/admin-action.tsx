@@ -9,6 +9,7 @@ import { DeleteDialog } from "../delete-dialog";
 import { useRouter } from "next/navigation";
 import { Button } from "../ui/button";
 import { useState } from "react";
+import { ConfirmDialog } from "../confirm-dialog";
 
 export function AdminAction({ order }: { order: Order }) {
   const router = useRouter();
@@ -65,12 +66,16 @@ export function AdminAction({ order }: { order: Order }) {
             </TooltipContent>
           </Tooltip>
         </div>
-        <Button
-          onClick={ship}
-          disabled={order.status !== "unfulfilled" || loading}
-        >
-          {loading ? "Processing..." : "Mark As Shipping"}
-        </Button>
+        <ConfirmDialog
+          confirmCallback={ship}
+          buttonText="Confirm"
+          text="This action will update order status to shipping. Do you wish to continue?"
+          trigger={
+            <Button disabled={order.status !== "unfulfilled" || loading}>
+              {loading ? "Processing..." : "Mark As Shipping"}
+            </Button>
+          }
+        />
       </CardContent>
     </Card>
   );

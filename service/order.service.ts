@@ -219,14 +219,14 @@ export async function getOrderByIdWithRelationsAsServiceRole(id: string): Promis
   return { data };
 }
 
-export async function getOrdersWithRelation(): Promise<ActionResult<OrderWithRelation[]>> {
+export async function getOrdersWithRelation(limit = 100): Promise<ActionResult<OrderWithRelation[]>> {
     const supabase = await createClient();
 
     const { data, error } = await supabase.from("orders").select(`
       *,
       order_items (*),
       order_addresses (*)
-    `).order("created_at", { ascending: false });
+    `).order("created_at", { ascending: false }).limit(limit);
 
     if (error) throw error;
 

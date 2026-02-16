@@ -1,3 +1,4 @@
+import { CustomerAction } from "@/components/order/customer-actiont";
 import { OrderID } from "@/components/order/order-id";
 import { OrderStatusComponent } from "@/components/order/order-status";
 import { OrderTracking } from "@/components/order/order-tracking";
@@ -6,6 +7,7 @@ import { Crumb } from "@/components/private/private-navbar";
 import {
   Card,
   CardContent,
+  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
@@ -19,7 +21,7 @@ import {
 import { constructFullAddress } from "@/utils/address";
 import { formatDateTime } from "@/utils/order";
 import { displayRupiah } from "@/utils/price";
-import { Clock, MapPin, CreditCard, Coffee } from "lucide-react";
+import { Clock, MapPin, CreditCard, Coffee, PhoneCall } from "lucide-react";
 import Image from "next/image";
 
 async function getOrder(id: string): Promise<OrderWithRelation> {
@@ -74,6 +76,10 @@ export default async function OrderDetailPage({
       <div className="col-span-3 md:col-span-2 grid grid-cols-2 gap-5">
         {/* Tracking */}
         <OrderTracking order={order} />
+
+        {/* Customer Action */}
+        <CustomerAction order={order} />
+
         {/* Order Items */}
         <Card className="col-span-2">
           <CardHeader>
@@ -168,6 +174,30 @@ export default async function OrderDetailPage({
             <span>Total Amount</span>
             <span>{displayRupiah(order.total_amount)}</span>
           </CardFooter>
+        </Card>
+
+        {/* Contact */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2 text-base">
+              <PhoneCall className="h-4 w-4" />
+              Troubleshooting
+            </CardTitle>
+            <CardDescription>
+              If you have any problem with you order, feel free to contact our
+              admins.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="text-sm flex flex-col gap-3">
+            <div className="flex justify-between">
+              <span className="font-medium">Email</span>
+              <span>admin@matte.com</span>
+            </div>
+            <div className="flex justify-between">
+              <span className="font-medium">Whatsapp</span>
+              <span>+62-878-7076-7752</span>
+            </div>
+          </CardContent>
         </Card>
       </div>
     </div>

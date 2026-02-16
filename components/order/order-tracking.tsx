@@ -41,7 +41,7 @@ export function OrderTracking({ order }: { order: Order }) {
           <CircleDot className="size-4" />
           Status
         </CardTitle>
-        <CardContent className="grid grid-cols-3 text-sm gap-1 text-muted-foreground">
+        <CardContent className="grid grid-cols-3 text-sm gap-1">
           {items.map((item, idx) => {
             return <OrderTrackingItem key={idx} item={item} />;
           })}
@@ -56,7 +56,9 @@ export function OrderTrackingItem({ item }: { item: TrackingItem }) {
     <div
       className={cn(
         "col-span-1 py-3",
-        item.isActive ? "opacity-100" : "opacity-50",
+        item.isActive
+          ? "opacity-100 font-semibold"
+          : "opacity-50 text-muted-foreground",
       )}
     >
       <span className="mb-2 flex items-center gap-1">

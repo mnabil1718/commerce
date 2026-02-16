@@ -16,8 +16,12 @@ import { MouseEvent, useState } from "react"; // Added useState
 
 export function DeleteDialog({
   trigger,
+  text = "This action cannot be undone. This will permanently delete the resource from our high-end servers.",
+  buttonText = "Delete",
   deleteCallback,
 }: {
+  text?: string;
+  buttonText?: string;
   trigger: React.ReactNode;
   deleteCallback: (e: MouseEvent<HTMLButtonElement>) => Promise<void> | void;
 }) {
@@ -40,10 +44,7 @@ export function DeleteDialog({
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-          <AlertDialogDescription>
-            This action cannot be undone. This will permanently delete the
-            resource from our high-end servers.
-          </AlertDialogDescription>
+          <AlertDialogDescription>{text}</AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel disabled={loading}>Cancel</AlertDialogCancel>
@@ -53,7 +54,7 @@ export function DeleteDialog({
             disabled={loading}
             className="min-w-20"
           >
-            {loading ? <Ellipsis className="animate-pulse" /> : "Delete"}
+            {loading ? <Ellipsis className="animate-pulse" /> : buttonText}
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

@@ -64,7 +64,8 @@ export function PaymentMethod() {
       });
     } catch (e: unknown) {
       if (e instanceof Error) {
-        return toast.error(e.message);
+        toast.error(e.message);
+        return;
       }
       toast.error("Cannot process transaction");
     } finally {

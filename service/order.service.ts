@@ -197,3 +197,13 @@ export async function getOrderByIdWithRelations(id: string): Promise<ActionResul
 
   return { data };
 }
+
+export async function getOrders(): Promise<ActionResult<Order[]>> {
+    const supabase = await createClient();
+
+    const { data, error } = await supabase.from("orders").select().order("created_at", { ascending: false });
+
+    if (error) throw error;
+
+    return { data: data || [] }
+}

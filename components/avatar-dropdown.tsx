@@ -13,7 +13,7 @@ import {
 import { createClient } from "@/lib/supabase/client";
 import { getFullNameInitial } from "@/utils/profile";
 import { JwtPayload } from "@supabase/supabase-js";
-import { Gauge, LogOut, UserCircle } from "lucide-react";
+import { Coffee, Gauge, LogOut, UserCircle } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 
@@ -46,6 +46,11 @@ export function AvatarDropdown({ user }: { user: JwtPayload }) {
           <DropdownMenuItem asChild>
             <Link href={"/dashboard"} className="flex items-center gap-2">
               <Gauge /> Dashboard
+            </Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem asChild>
+            <Link href={"/orders"} className="flex items-center gap-2">
+              <Coffee /> My Orders
             </Link>
           </DropdownMenuItem>
           <DropdownMenuItem>

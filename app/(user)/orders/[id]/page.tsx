@@ -2,6 +2,7 @@ import { CustomerAction } from "@/components/order/customer-actiont";
 import { OrderID } from "@/components/order/order-id";
 import { OrderStatusComponent } from "@/components/order/order-status";
 import { OrderTracking } from "@/components/order/order-tracking";
+import { PaymentStatus } from "@/components/order/payment-status";
 import { BreadcrumbComponent } from "@/components/private/breadcrumb";
 import { Crumb } from "@/components/private/private-navbar";
 import {
@@ -13,11 +14,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { getOrderByIdWithRelations } from "@/service/order.service";
-import {
-  OrderPaymentStatus,
-  OrderStatus,
-  OrderWithRelation,
-} from "@/types/order.type";
+import { OrderStatus, OrderWithRelation } from "@/types/order.type";
 import { constructFullAddress } from "@/utils/address";
 import { formatDateTime } from "@/utils/order";
 import { displayRupiah } from "@/utils/price";
@@ -43,7 +40,7 @@ export default async function OrderDetailPage({
     {
       label: "My Orders",
       isPage: false,
-      href: "/my-orders",
+      href: "/orders",
     },
     {
       label: `Order #${order.order_number}`,
@@ -149,12 +146,8 @@ export default async function OrderDetailPage({
             </CardTitle>
           </CardHeader>
           <CardContent className="text-sm flex flex-col gap-3">
-            <div className="flex justify-between">
-              <span className="font-medium">Payment Status</span>
-              <OrderStatusComponent
-                status={order.payment_status as OrderPaymentStatus}
-              />
-            </div>
+            <PaymentStatus order={order} />
+
             <div className="flex justify-between">
               <span className="font-medium">Payment Method</span>
               <span className="capitalize">

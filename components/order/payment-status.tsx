@@ -2,11 +2,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client";
 
-import {
-  Order,
-  OrderPaymentStatus,
-  OrderWithRelation,
-} from "@/types/order.type";
+import { Order, OrderPaymentStatus } from "@/types/order.type";
 import { OrderStatusComponent } from "./order-status";
 import { useRouter } from "next/navigation";
 import { Button } from "../ui/button";

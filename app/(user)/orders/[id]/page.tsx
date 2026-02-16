@@ -70,7 +70,7 @@ export default async function OrderDetailPage({
       </div>
 
       {/* MAIN INFO */}
-      <div className="col-span-3 md:col-span-2 grid grid-cols-2 gap-5">
+      <div className="col-span-3 md:col-span-2 grid grid-cols-2 gap-5 h-fit">
         {/* Tracking */}
         <OrderTracking order={order} />
 
@@ -119,7 +119,7 @@ export default async function OrderDetailPage({
       </div>
 
       {/* Sidebar */}
-      <div className="col-span-3 md:col-span-1 flex flex-col gap-5">
+      <div className="col-span-3 md:col-span-1 flex flex-col gap-5 h-fit">
         {/* Shipping Address */}
         <Card>
           <CardHeader>

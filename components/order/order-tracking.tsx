@@ -36,17 +36,17 @@ export function OrderTracking({ order }: { order: Order }) {
 
   return (
     <Card className="col-span-2">
-      <CardHeader>
+      <CardHeader className="gap-0">
         <CardTitle className="flex items-center gap-2">
           <CircleDot className="size-4" />
           Status
         </CardTitle>
-        <CardContent className="grid grid-cols-3 text-sm gap-1">
-          {items.map((item, idx) => {
-            return <OrderTrackingItem key={idx} item={item} />;
-          })}
-        </CardContent>
       </CardHeader>
+      <CardContent className="grid grid-cols-3 text-sm gap-1">
+        {items.map((item, idx) => {
+          return <OrderTrackingItem key={idx} item={item} />;
+        })}
+      </CardContent>
     </Card>
   );
 }

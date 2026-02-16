@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import crypto from 'crypto';
-import { getOrderByIdAsServiceRole, updateOrderAsServiceRole } from '@/service/order.service';
+import { getOrderByIdWithRelationsAsServiceRole, updateOrderAsServiceRole } from '@/service/order.service';
+import { decreaseMultipleProductStockAsServiceRole } from '@/service/product.service';
 
 export async function POST(request: Request) {
   try {
@@ -28,7 +29,20 @@ export async function POST(request: Request) {
       status = "failed";
     }
 
-    const { data: order } = await getOrderByIdAsServiceRole(order_id);
+    const { data: order } = await getOrderByIdWithRelationsAsServiceRole(order_id);
+
+    if (status === "paid") {
+      try {
+        const items = order.order_items.map((i) => ({ product_id: i.product_id || 0, quantity: i.quantity }));
+        await decreaseMultipleProductStockAsServiceRole(items); 
+      } catch (stockError) {
+        return NextResponse.json({ 
+          message: 'Payment received but stock update failed',
+          error: stockError instanceof Error ? stockError.message : 'Unknown error'
+        }, { status: 500 });
+      }
+    }
+
     await updateOrderAsServiceRole({ ...order, payment_status: status, payment_method: payment_type });
     return NextResponse.json({ status: 'ok' }, { status: 200 });
 

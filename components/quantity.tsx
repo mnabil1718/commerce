@@ -27,7 +27,7 @@ export function Quantity({ init, max = 10, changeCallback }: QuantityProps) {
     <ButtonGroup className="rounded-full overflow-hidden">
       <Button
         onClick={dec}
-        disabled={q === 1}
+        disabled={q <= 1}
         variant="outline"
         className="rounded-l-full"
       >

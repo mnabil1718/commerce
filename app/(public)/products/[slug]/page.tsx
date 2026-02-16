@@ -2,6 +2,7 @@ import { NavBreadcrumb } from "@/components/breadcrumb";
 import { Crumb } from "@/components/private/private-navbar";
 import { AddCart } from "@/components/products/add-cart";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { cn } from "@/lib/utils";
 import { getProductBySlug } from "@/service/product.service";
 import { Product } from "@/types/product.type";
 import { displayRupiah } from "@/utils/price";
@@ -45,7 +46,10 @@ export default async function SingleProductPage({
               src={p.image}
               alt={p.title}
               fill
-              className="w-full h-full object-cover"
+              className={cn(
+                "w-full h-full object-cover",
+                p.stock === 0 ? "grayscale" : "",
+              )}
             />
           )}
         </Card>

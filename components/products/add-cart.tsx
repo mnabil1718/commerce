@@ -9,7 +9,7 @@ import { useState } from "react";
 
 export function AddCart({ product }: { product: Product }) {
   const store = useStore(useCartStore, (state) => state);
-  const [q, setQty] = useState<number>(1);
+  const [q, setQty] = useState<number>(product.stock > 0 ? 1 : 0);
 
   if (!store) return null;
 

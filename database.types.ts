@@ -349,6 +349,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      decrease_product_stocks: { Args: { items: Json }; Returns: undefined }
       is_admin: { Args: never; Returns: boolean }
     }
     Enums: {

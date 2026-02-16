@@ -5,6 +5,7 @@ import { ActionResult } from "@/types/action.type";
 import { AddProductFormSchemaType, Product, ProductWithCategory } from "@/types/product.type";
 import { upload } from "./storage.service";
 import { BUCKET_NAME, IMAGES_PATH } from "@/constants/storage";
+import { createServiceRoleClient } from "@/lib/supabase/service-role";
 
 export async function createProduct(req: AddProductFormSchemaType): Promise<void> {
     const supabase = await createClient();
@@ -194,5 +195,17 @@ export async function getProductPriceRange(): Promise<{ min: number, max: number
     min: data[0].price,
     max: data[data.length - 1].price,
   };
+}
+
+export async function decreaseMultipleProductStockAsServiceRole(
+  items: { product_id: number; quantity: number }[]
+): Promise<void> {
+  const supabase = await createServiceRoleClient();
+
+  const { error } = await supabase.rpc('decrease_product_stocks', {
+    items: items
+  });
+
+  if (error) throw error;
 }
 

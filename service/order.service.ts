@@ -198,6 +198,27 @@ export async function getOrderByIdWithRelations(id: string): Promise<ActionResul
   return { data };
 }
 
+export async function getOrderByIdWithRelationsAsServiceRole(id: string): Promise<ActionResult<OrderWithRelation>> {
+  const supabase = await createServiceRoleClient();
+
+  const { data, error } = await supabase
+    .from("orders")
+    .select(`
+      *,
+      order_items (*),
+      order_addresses (*)
+    `)
+    .eq("id", id)
+    .maybeSingle();
+
+  if (error) throw error;
+
+  if (!data) throw new Error("Order not found");
+
+
+  return { data };
+}
+
 export async function getOrdersWithRelation(): Promise<ActionResult<OrderWithRelation[]>> {
     const supabase = await createClient();
 

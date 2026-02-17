@@ -2,7 +2,7 @@ import { Crumb, PrivateNavbar } from "@/components/private/private-navbar";
 import { Card, CardContent } from "@/components/ui/card";
 import { createClient } from "@/lib/supabase/server";
 import { displayRupiah } from "@/utils/price";
-import { ChartLine, Receipt, Star } from "lucide-react";
+import { ChartLine, Receipt } from "lucide-react";
 
 const crumbs: Crumb[] = [
   {

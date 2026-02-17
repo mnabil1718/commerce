@@ -38,13 +38,13 @@ export function EmailTemplate({ order }: EmailTemplateProps) {
               <Text className="m-0 text-xs font-semibold uppercase tracking-[0.2em] text-primary">
                 Order Confirmed
               </Text>
-              <Heading className="m-0 mt-1 text-3xl font-bold text-white">
+              <Heading className="m-0 mt-1 text-3xl font-bold text-foreground">
                 ☕ Your brew is on its way
               </Heading>
             </Section>
 
             {/* Body */}
-            <Section className="rounded-b-2xl bg-white px-8 py-8 shadow-sm">
+            <Section className="rounded-b-2xl bg-background px-8 py-8 shadow-sm">
               {/* Greeting */}
               <Text className="mt-3 text-lg font-semibold text-foreground">
                 Hey {order.order_user?.full_name ?? "there"}
@@ -56,12 +56,12 @@ export function EmailTemplate({ order }: EmailTemplateProps) {
                 way:
               </Text>
 
-              <Hr className="my-6 border-[#f0e8e0]" />
+              <Hr className="my-6 border-border" />
 
               {/* Order Meta */}
               <Row>
                 <Column className="w-1/2">
-                  <Text className="m-0 text-xs font-semibold uppercase tracking-wider text-[#9e7f66]">
+                  <Text className="m-0 text-xs font-semibold uppercase tracking-wider text-primary">
                     Order Number
                   </Text>
                   <Text className="m-0 mt-1 text-sm font-medium text-foreground">
@@ -69,7 +69,7 @@ export function EmailTemplate({ order }: EmailTemplateProps) {
                   </Text>
                 </Column>
                 <Column className="w-1/2">
-                  <Text className="m-0 text-xs font-semibold uppercase tracking-wider text-[#9e7f66]">
+                  <Text className="m-0 text-xs font-semibold uppercase tracking-wider text-primary">
                     Date
                   </Text>
                   <Text className="m-0 mt-1 text-sm font-medium text-foreground">
@@ -82,10 +82,10 @@ export function EmailTemplate({ order }: EmailTemplateProps) {
                 </Column>
               </Row>
 
-              <Hr className="my-6 border-[#f0e8e0]" />
+              <Hr className="my-6 border" />
 
               {/* Order Items */}
-              <Text className="m-0 text-xs font-semibold uppercase tracking-wider text-[#9e7f66]">
+              <Text className="m-0 text-xs font-semibold uppercase tracking-wider text-primary">
                 Your Order
               </Text>
 
@@ -136,19 +136,19 @@ export function EmailTemplate({ order }: EmailTemplateProps) {
                 </Column>
               </Row>
 
-              <Hr className="my-6 border-[#f0e8e0]" />
+              <Hr className="my-6 border" />
 
               {/* Delivery Address */}
               {address && (
                 <>
-                  <Text className="m-0 text-xs font-semibold uppercase tracking-wider text-[#9e7f66]">
+                  <Text className="m-0 text-xs font-semibold uppercase tracking-wider text-primary">
                     Delivering To
                   </Text>
                   <Text className="mt-1 text-sm leading-relaxed text-foreground">
                     {address.full_name}, {address.phone} -{" "}
                     {constructFullAddress(address)}
                   </Text>
-                  <Hr className="my-6 border-[#f0e8e0]" />
+                  <Hr className="my-6 border" />
                 </>
               )}
 
@@ -157,14 +157,14 @@ export function EmailTemplate({ order }: EmailTemplateProps) {
                 <Text className="m-0 text-sm text-[#6b5744]">
                   Sit back, relax, and let the caffeine come to you. ☕
                 </Text>
-                <Text className="m-0 mt-1 text-xs text-[#9e7f66]">
+                <Text className="m-0 mt-1 text-xs text-primary">
                   Questions about your order? Just reply to this email.
                 </Text>
               </Section>
             </Section>
 
             {/* Footer */}
-            <Text className="mt-6 text-center text-xs text-[#9e7f66]">
+            <Text className="mt-6 text-center text-xs text-primary">
               You&apos;re receiving this because you placed an order with us.
               <br />© {new Date().getFullYear()} Matte, Inc. All rights
               reserved.

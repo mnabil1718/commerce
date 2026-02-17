@@ -123,7 +123,7 @@ export function SearchDialog({ children }: { children: React.ReactNode }) {
                   onClick={handleButtonClick}
                   className="w-full font-medium rounded-full"
                 >
-                  See all results <ArrowRight />
+                  Search anyway <ArrowRight />
                 </Button>
               </li>
             </ul>

@@ -1,9 +1,9 @@
-import { ProductCard } from "../product-card";
 import { Product } from "@/types/product.type";
 import { getProductsWithoutRelation } from "@/service/product.service";
 import { Button } from "../ui/button";
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
+import { BestSellerGrid } from "./best-seller-grid";
 
 async function getProductsBestSeller(): Promise<Product[]> {
   const { data: products } = await getProductsWithoutRelation({});
@@ -25,11 +25,7 @@ export async function BestSellerSection() {
           </Button>
         </Link>
       </div>
-      <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-        {products.map((p, i) => {
-          return <ProductCard key={i} product={p} />;
-        })}
-      </ul>
+      <BestSellerGrid feed={products} />
     </section>
   );
 }

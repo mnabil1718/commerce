@@ -64,9 +64,7 @@ export default async function SingleProductPage({
             <h2 className="font-semibold text-3xl tracking-tight text-primary">
               {displayRupiah(p.price)}
             </h2>
-            <div className="w-fit relative flex items-stretch">
-              Stock: {p.stock}
-            </div>
+
             <AddCart product={p} />
           </CardContent>
         </Card>

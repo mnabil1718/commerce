@@ -10,6 +10,7 @@ import {
   SheetTrigger,
 } from "./ui/sheet";
 import { useState } from "react";
+import { Store } from "lucide-react";
 
 export function MobileNav({ children }: { children: React.ReactNode }) {
   const [open, setOpen] = useState<boolean>(false);
@@ -27,8 +28,12 @@ export function MobileNav({ children }: { children: React.ReactNode }) {
         </span>
         <ul className="text-lg font-medium">
           <li>
-            <Link href={`/products`} onClick={() => setOpen(false)}>
-              Shop
+            <Link
+              href={`/products`}
+              onClick={() => setOpen(false)}
+              className="flex items-center gap-2"
+            >
+              <Store size={20} className="text-muted-foreground" /> Shop
             </Link>
           </li>
         </ul>

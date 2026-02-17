@@ -1,0 +1,1 @@
+export const POSTGRES_CHANGES = "postgres_changes";

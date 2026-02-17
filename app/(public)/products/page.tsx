@@ -1,6 +1,5 @@
-import { ProductCard } from "@/components/product-card";
 import { ProductFilter } from "@/components/product-filter";
-import { ProductSort } from "@/components/products/product-sort";
+import { ProductCatelogGrid } from "@/components/products/catalog-grid";
 import { getProductCategories } from "@/service/category.service";
 import {
   getProductPriceRange,
@@ -49,27 +48,7 @@ export default async function ProductsPage({
         <ProductFilter min={min} max={max} categories={c} />
       </aside>
 
-      {/* Product Grid */}
-      <main className="col-span-3 md:col-span-2 gap-5">
-        <div className="flex justify-between items-center mb-3">
-          <p className="text-sm text-muted-foreground/70">
-            Showing {p.length} products
-          </p>
-          <ProductSort />
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-          {p.length > 0 &&
-            p.map((product, i) => (
-              <ProductCard key={product.id || i} product={product} />
-            ))}
-          {p.length === 0 && (
-            <div className="min-h-48 col-span-1 md:col-span-2 text-muted-foreground/60 flex flex-col justify-center items-center">
-              No matches for products found
-            </div>
-          )}
-        </div>
-      </main>
+      <ProductCatelogGrid products={p} />
     </div>
   );
 }

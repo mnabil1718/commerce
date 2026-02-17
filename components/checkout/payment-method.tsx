@@ -47,19 +47,19 @@ export function PaymentMethod() {
       // Trigger Snap Popup
       (window as any).snap.pay(token, {
         onSuccess: (result: any) => {
-          store.reset(user?.id || undefined);
           router.push(`/orders/${order.id}`);
+          store.reset(user?.id || undefined);
         },
         onPending: (result: any) => {
-          store.reset(user?.id || undefined);
           router.push(`/orders/${order.id}`);
+          store.reset(user?.id || undefined);
         },
         onError: (result: any) => {
           toast.error(result.error_message);
         },
         onClose: () => {
-          store.reset(user?.id || undefined);
           router.push(`/orders/${order.id}`);
+          store.reset(user?.id || undefined);
         },
       });
     } catch (e: unknown) {
@@ -74,45 +74,47 @@ export function PaymentMethod() {
   };
 
   return (
-    <Card className="sticky top-28">
-      <CardHeader>
-        <CardTitle>Payment Method</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <RadioGroup defaultValue="midtrans">
-          <FieldLabel htmlFor="midtrans">
-            <Field orientation="horizontal">
-              <FieldContent>
-                <FieldTitle className="line-clamp-1">
-                  Midtrans Payment Gateway
-                </FieldTitle>
-              </FieldContent>
-              <RadioGroupItem value="midtrans" id="midtrans" />
-            </Field>
-          </FieldLabel>
-        </RadioGroup>
-      </CardContent>
-      <CardFooter className="flex flex-col items-stretch gap-2 border-t">
-        {store.items.length > 0 && (
-          <div className="flex items-center justify-between font-semibold">
-            <span>Total</span>
-            <span>{displayRupiah(store.getTotalPrice())}</span>
-          </div>
-        )}
-        <Button
-          disabled={isDisabled}
-          onClick={pay}
-          className="font-medium rounded-full"
-        >
-          {loading ? (
-            <div className="flex items-center gap-1">
-              <Loader2 className="animate-spin" /> Processing...
+    <>
+      <Card className="sticky top-28">
+        <CardHeader>
+          <CardTitle>Payment Method</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <RadioGroup defaultValue="midtrans">
+            <FieldLabel htmlFor="midtrans">
+              <Field orientation="horizontal">
+                <FieldContent>
+                  <FieldTitle className="line-clamp-1">
+                    Midtrans Payment Gateway
+                  </FieldTitle>
+                </FieldContent>
+                <RadioGroupItem value="midtrans" id="midtrans" />
+              </Field>
+            </FieldLabel>
+          </RadioGroup>
+        </CardContent>
+        <CardFooter className="flex flex-col items-stretch gap-2 border-t">
+          {store.items.length > 0 && (
+            <div className="flex items-center justify-between font-semibold">
+              <span>Total</span>
+              <span>{displayRupiah(store.getTotalPrice())}</span>
             </div>
-          ) : (
-            "Pay Now"
           )}
-        </Button>
-      </CardFooter>
-    </Card>
+          <Button
+            disabled={isDisabled}
+            onClick={pay}
+            className="font-medium rounded-full"
+          >
+            {loading ? (
+              <div className="flex items-center gap-1">
+                <Loader2 className="animate-spin" /> Processing...
+              </div>
+            ) : (
+              "Pay Now"
+            )}
+          </Button>
+        </CardFooter>
+      </Card>
+    </>
   );
 }

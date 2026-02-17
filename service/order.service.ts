@@ -154,10 +154,21 @@ export async function updateOrderAsServiceRole(order: Order): Promise<ActionResu
 export async function initPayment(items: CartItem[], addr: ShippingAddress): Promise<{ token: string, order: Order }> {
     const { data: { order } } = await createOrder(items, addr);
 
+    const supabase = await createClient();
+
+    const { data: { user }, error } = await supabase.auth.getUser();
+
+    if (error) throw error;
+
+    if (!user) throw new Error("Action not allowed");
+
     const parameter = {
         transaction_details: {
             order_id: order.id,
             gross_amount: order.total_amount,
+        },
+        customer_details: {
+            email: user.email
         },
     };
 
@@ -198,13 +209,14 @@ export async function getOrderByIdWithRelations(id: string): Promise<ActionResul
   return { data };
 }
 
-export async function getOrderByIdWithRelationsAsServiceRole(id: string): Promise<ActionResult<OrderWithRelation>> {
+export async function getOrderByIdWithRelationsAsServiceRole(id: string): Promise<ActionResult<AdminOrderWithRelation>> {
   const supabase = await createServiceRoleClient();
 
   const { data, error } = await supabase
     .from("orders")
     .select(`
       *,
+      order_user:profiles (*),
       order_items (*),
       order_addresses (*)
     `)

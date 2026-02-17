@@ -2,6 +2,8 @@ import { NextResponse } from 'next/server';
 import crypto from 'crypto';
 import { getOrderByIdWithRelationsAsServiceRole, updateOrderAsServiceRole } from '@/service/order.service';
 import { decreaseMultipleProductStockAsServiceRole } from '@/service/product.service';
+import { EmailTemplate } from '@/components/email/template';
+import { resend } from '@/lib/resend';
 
 export async function POST(request: Request) {
   try {
@@ -44,6 +46,20 @@ export async function POST(request: Request) {
     }
 
     await updateOrderAsServiceRole({ ...order, payment_status: status, payment_method: payment_type });
+
+
+    const {  error } = await resend.emails.send({
+      from: 'Matte. Inc. <onboarding@resend.dev>',
+      to: ['cucibaju123@gmail.com'], // testing
+      subject: 'Order Confirmation',
+      react: EmailTemplate({ order }),
+    });
+
+    if (error) {
+      return Response.json({ error }, { status: 500 });
+    }
+
+
     return NextResponse.json({ status: 'ok' }, { status: 200 });
 
   } catch (error: unknown) {

@@ -84,7 +84,7 @@ export function SearchDialog({ children }: { children: React.ReactNode }) {
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>{children}</DialogTrigger>
-      <DialogContent className="top-5 translate-y-0 px-5">
+      <DialogContent className="top-5 translate-y-0 px-5 rounded-2xl">
         <DialogHeader>
           <DialogTitle></DialogTitle>
           <DialogDescription></DialogDescription>

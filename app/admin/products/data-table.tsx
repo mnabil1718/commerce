@@ -19,7 +19,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Plus, SearchIcon } from "lucide-react";
@@ -28,8 +28,10 @@ import {
   InputGroupAddon,
   InputGroupInput,
 } from "@/components/ui/input-group";
-import { supabase } from "@/lib/supabase/client";
-import { POSTGRES_CHANGES } from "@/constants/realtime";
+import {
+  POSTGRES_CHANGES,
+  PUBLIC_PRODUCTS_CHANNEL,
+} from "@/constants/realtime";
 import { Product, ProductWithCategory } from "@/types/product.type";
 import { Category } from "@/types/category.type";
 import {
@@ -39,6 +41,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { createClient } from "@/lib/supabase/client";
+import { RealtimeChannel } from "@supabase/supabase-js";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -51,60 +55,118 @@ export function DataTable<TData extends Product, TValue>({
   data,
   categories = [],
 }: DataTableProps<TData, TValue>) {
+  const supabase = createClient();
+  const ref = useRef<RealtimeChannel | null>(null);
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [tableData, setTableData] = useState<TData[]>(data);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     [],
   );
 
-  useEffect(() => {
-    const channel = supabase
-      .channel("products:admin")
-      .on(
-        POSTGRES_CHANGES,
-        { event: "*", schema: "public", table: "products" },
-        async (payload) => {
-          if (
-            payload.eventType === "INSERT" ||
-            payload.eventType === "UPDATE"
-          ) {
-            // fetch the full row with category
-            const { data } = await supabase
-              .from("products")
-              .select(`*, category:categories (*)`)
-              .eq("id", payload.new.id)
-              .single();
+  const subscription = () => {
+    const ch = supabase.channel(PUBLIC_PRODUCTS_CHANNEL);
 
-            if (!data) return;
+    ch.on(
+      POSTGRES_CHANGES,
+      {
+        event: "*",
+        schema: "public",
+        table: "products",
+      },
+      async (payload) => {
+        if (payload.eventType === "INSERT" || payload.eventType === "UPDATE") {
+          // fetch the full row with category
+          const { data } = await supabase
+            .from("products")
+            .select(`*, category:categories (*)`)
+            .eq("id", payload.new.id)
+            .single();
 
-            const product = data as unknown as ProductWithCategory;
+          if (!data) return;
 
-            if (payload.eventType === "INSERT") {
-              setTableData((prev) => [product as unknown as TData, ...prev]);
-            }
+          const product = data as unknown as ProductWithCategory;
 
-            if (payload.eventType === "UPDATE") {
-              setTableData((prev) =>
-                prev.map((row) =>
-                  row.id === product.id ? (product as unknown as TData) : row,
-                ),
-              );
-            }
+          if (payload.eventType === "INSERT") {
+            setTableData((prev) => [product as unknown as TData, ...prev]);
           }
 
-          if (payload.eventType === "DELETE") {
+          if (payload.eventType === "UPDATE") {
             setTableData((prev) =>
-              prev.filter((row) => row.id !== (payload.old as TData).id),
+              prev.map((row) =>
+                row.id === product.id ? (product as unknown as TData) : row,
+              ),
             );
           }
-        },
-      )
-      .subscribe();
+        }
+
+        if (payload.eventType === "DELETE") {
+          setTableData((prev) =>
+            prev.filter((row) => row.id !== (payload.old as TData).id),
+          );
+        }
+      },
+    ).subscribe();
+
+    return ch;
+  };
+
+  useEffect(() => {
+    ref.current = subscription();
 
     return () => {
-      supabase.removeChannel(channel);
+      ref.current?.unsubscribe();
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // useEffect(() => {
+  //   const channel = supabase
+  //     .channel("products:admin")
+  //     .on(
+  //       POSTGRES_CHANGES,
+  //       { event: "*", schema: "public", table: "products" },
+  //       async (payload) => {
+  //         if (
+  //           payload.eventType === "INSERT" ||
+  //           payload.eventType === "UPDATE"
+  //         ) {
+  //           // fetch the full row with category
+  //           const { data } = await supabase
+  //             .from("products")
+  //             .select(`*, category:categories (*)`)
+  //             .eq("id", payload.new.id)
+  //             .single();
+
+  //           if (!data) return;
+
+  //           const product = data as unknown as ProductWithCategory;
+
+  //           if (payload.eventType === "INSERT") {
+  //             setTableData((prev) => [product as unknown as TData, ...prev]);
+  //           }
+
+  //           if (payload.eventType === "UPDATE") {
+  //             setTableData((prev) =>
+  //               prev.map((row) =>
+  //                 row.id === product.id ? (product as unknown as TData) : row,
+  //               ),
+  //             );
+  //           }
+  //         }
+
+  //         if (payload.eventType === "DELETE") {
+  //           setTableData((prev) =>
+  //             prev.filter((row) => row.id !== (payload.old as TData).id),
+  //           );
+  //         }
+  //       },
+  //     )
+  //     .subscribe();
+
+  //   return () => {
+  //     supabase.removeChannel(channel);
+  //   };
+  // }, [supabase]);
 
   const table = useReactTable({
     data: tableData,

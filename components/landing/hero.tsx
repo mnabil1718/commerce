@@ -19,7 +19,7 @@ export async function Hero() {
 
   return (
     <div className="col-span-2 grid grid-cols-2 gap-5">
-      <HeroBestSeller featured={featured} />
+      <HeroBestSeller product={featured} />
 
       <Card className="col-span-2 md:col-span-1 overflow-hidden p-0">
         <CardContent className="relative flex flex-col w-full p-0 h-full overflow-hidden">

@@ -8,35 +8,8 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "../ui/button";
 import Image from "next/image";
 import { Star } from "lucide-react";
-import { useEffect, useState } from "react";
-import { POSTGRES_CHANGES } from "@/constants/realtime";
-import { supabase } from "@/lib/supabase/client";
 
-export function HeroBestSeller({ featured }: { featured: Product }) {
-  const [product, setProduct] = useState<Product>(featured);
-
-  useEffect(() => {
-    const channel = supabase
-      .channel("products:bestseller:hero")
-      .on(
-        POSTGRES_CHANGES,
-        {
-          event: "UPDATE",
-          schema: "public",
-          table: "products",
-          filter: `id=eq.${featured.id}`,
-        },
-        (payload) => {
-          setProduct(payload.new as Product);
-        },
-      )
-      .subscribe();
-
-    return () => {
-      supabase.removeChannel(channel);
-    };
-  }, [featured.id]);
-
+export function HeroBestSeller({ product }: { product: Product }) {
   return (
     <Card className="col-span-2 overflow-hidden p-0">
       <CardContent className="relative grid grid-cols-2 gap-0 p-0 overflow-hidden">

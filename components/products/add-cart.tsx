@@ -5,39 +5,11 @@ import { Product } from "@/types/product.type";
 import useStore from "@/hooks/use-store";
 import { Quantity } from "../quantity";
 import { Button } from "../ui/button";
-import { useEffect, useState } from "react";
-import { supabase } from "@/lib/supabase/client";
-import { POSTGRES_CHANGES } from "@/constants/realtime";
+import { useState } from "react";
 
-export function AddCart({ product }: { product: Product }) {
-  const [p, setP] = useState<Product>(product);
+export function AddCart({ p }: { p: Product }) {
   const store = useStore(useCartStore, (state) => state);
   const [q, setQty] = useState<number>(p.stock > 0 ? 1 : 0);
-
-  useEffect(() => {
-    const channel = supabase
-      .channel(`products:${product.id}:add-cart`)
-      .on(
-        POSTGRES_CHANGES,
-        {
-          event: "UPDATE",
-          schema: "public",
-          table: "products",
-          filter: `id=eq.${product.id}`,
-        },
-        (payload) => {
-          const updated = payload.new as Product;
-          setP(updated);
-          // clamp qty if stock drops below current selection
-          setQty((prev) => Math.min(prev, updated.stock));
-        },
-      )
-      .subscribe();
-
-    return () => {
-      supabase.removeChannel(channel);
-    };
-  }, [product.id]);
 
   if (!store) return null;
 

@@ -1,12 +1,8 @@
 import { NavBreadcrumb } from "@/components/breadcrumb";
 import { Crumb } from "@/components/private/private-navbar";
-import { AddCart } from "@/components/products/add-cart";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { cn } from "@/lib/utils";
+import { ProductDetail } from "@/components/products/product-detail";
 import { getProductBySlug } from "@/service/product.service";
 import { Product } from "@/types/product.type";
-import { displayRupiah } from "@/utils/price";
-import Image from "next/image";
 
 async function getSingleProduct(slug: string): Promise<Product> {
   const { data: product } = await getProductBySlug(slug);
@@ -39,48 +35,7 @@ export default async function SingleProductPage({
       <div className="col-span-2 pt-12">
         <NavBreadcrumb crumbs={crumbs} />
       </div>
-      <div className="col-span-2 md:col-span-1 flex flex-col gap-5">
-        <Card className="relative p-0 gap-0 h-full aspect-3/2 overflow-hidden">
-          {p.image && (
-            <Image
-              src={p.image}
-              alt={p.title}
-              fill
-              className={cn(
-                "w-full h-full object-cover",
-                p.stock === 0 ? "grayscale" : "",
-              )}
-            />
-          )}
-        </Card>
-      </div>
-      <div className="col-span-2 md:col-span-1 flex flex-col gap-5">
-        <Card className="flex flex-col flex-1 ">
-          <CardHeader>
-            <CardTitle>Product Details</CardTitle>
-          </CardHeader>
-          <CardContent className="flex flex-col gap-5">
-            <h1 className="text-3xl font-medium">{p.title}</h1>
-            <h2 className="font-semibold text-3xl tracking-tight text-primary">
-              {displayRupiah(p.price)}
-            </h2>
-
-            <AddCart product={p} />
-          </CardContent>
-        </Card>
-      </div>
-      <div className="col-span-2">
-        <Card>
-          <CardHeader>
-            <CardTitle>Product Description</CardTitle>
-          </CardHeader>
-          <CardContent className="flex flex-col gap-5">
-            <p className="whitespace-pre-line leading-relaxed">
-              {p.description}
-            </p>
-          </CardContent>
-        </Card>
-      </div>
+      <ProductDetail product={p} />
     </div>
   );
 }

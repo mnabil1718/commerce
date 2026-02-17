@@ -22,6 +22,7 @@ import { Loader2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { useAuthStore } from "@/providers/auth.provider";
+import { LOADING_TOAST } from "@/constants/toast";
 
 export function PaymentMethod() {
   const router = useRouter();
@@ -39,6 +40,16 @@ export function PaymentMethod() {
   const isDisabled =
     store.items.length === 0 || addresses.length === 0 || loading;
 
+  const handlePostPayment = (orderId: string) => {
+    toast.success("Redirecting. Please wait...", { id: LOADING_TOAST });
+
+    store.reset(user?.id || undefined);
+
+    router.push(`/orders/${orderId}`);
+
+    setTimeout(() => toast.dismiss(LOADING_TOAST), 2000);
+  };
+
   const pay = async () => {
     setLoading(true);
     try {
@@ -47,19 +58,16 @@ export function PaymentMethod() {
       // Trigger Snap Popup
       (window as any).snap.pay(token, {
         onSuccess: (result: any) => {
-          router.push(`/orders/${order.id}`);
-          store.reset(user?.id || undefined);
+          handlePostPayment(order.id);
         },
         onPending: (result: any) => {
-          router.push(`/orders/${order.id}`);
-          store.reset(user?.id || undefined);
+          handlePostPayment(order.id);
         },
         onError: (result: any) => {
           toast.error(result.error_message);
         },
         onClose: () => {
-          router.push(`/orders/${order.id}`);
-          store.reset(user?.id || undefined);
+          handlePostPayment(order.id);
         },
       });
     } catch (e: unknown) {

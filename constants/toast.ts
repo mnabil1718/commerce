@@ -1,0 +1,1 @@
+export const LOADING_TOAST = "toast:loading";

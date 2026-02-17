@@ -19,8 +19,12 @@ export async function CategoriesSection() {
       <ul className="grid grid-cols-4 gap-5">
         {categories.map((c, i) => {
           return (
-            <Link key={i} href={`/products?category=${c.id}`}>
-              <li className="col-span-2 md:col-span-1">
+            <Link
+              key={i}
+              href={`/products?category=${c.id}`}
+              className="col-span-2 md:col-span-1"
+            >
+              <li className="w-full">
                 {" "}
                 <div className="flex flex-col items-center gap-3 p-5 hover:bg-secondary/10 rounded-xl cursor-pointer">
                   <div className="relative bg-secondary/20 w-16 h-16 rounded-full overflow-hidden">

@@ -31,7 +31,7 @@ export function Search() {
   };
 
   return (
-    <InputGroup className="max-w-72 rounded-full h-11">
+    <InputGroup className="w-full rounded-full h-11">
       <InputGroupInput
         type="search"
         placeholder="What you wanna drink today?"

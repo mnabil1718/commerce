@@ -4,7 +4,7 @@ import { useAuthStore } from "@/providers/auth.provider";
 import { Product } from "@/types/product.type";
 
 import { displayRupiah } from "@/utils/price";
-import { Coffee, Star } from "lucide-react";
+import { Star } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 

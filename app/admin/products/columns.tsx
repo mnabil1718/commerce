@@ -36,6 +36,11 @@ export const columns: ColumnDef<ProductWithCategory>[] = [
   {
     accessorKey: "category",
     header: "Category",
+    filterFn: (row, columnId, filterValue) => {
+      if (!filterValue) return true;
+      const category = row.original.category;
+      return String(category?.id) === String(filterValue);
+    },
     cell: ({ row }) => {
       const category = row.original.category;
 

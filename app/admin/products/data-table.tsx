@@ -19,7 +19,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Plus, SearchIcon } from "lucide-react";
@@ -28,23 +28,86 @@ import {
   InputGroupAddon,
   InputGroupInput,
 } from "@/components/ui/input-group";
+import { supabase } from "@/lib/supabase/client";
+import { POSTGRES_CHANGES } from "@/constants/realtime";
+import { Product, ProductWithCategory } from "@/types/product.type";
+import { Category } from "@/types/category.type";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  categories?: Category[];
 }
 
-export function DataTable<TData, TValue>({
+export function DataTable<TData extends Product, TValue>({
   columns,
   data,
+  categories = [],
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
+  const [tableData, setTableData] = useState<TData[]>(data);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     [],
   );
 
+  useEffect(() => {
+    const channel = supabase
+      .channel("products:admin")
+      .on(
+        POSTGRES_CHANGES,
+        { event: "*", schema: "public", table: "products" },
+        async (payload) => {
+          if (
+            payload.eventType === "INSERT" ||
+            payload.eventType === "UPDATE"
+          ) {
+            // fetch the full row with category
+            const { data } = await supabase
+              .from("products")
+              .select(`*, category:categories (*)`)
+              .eq("id", payload.new.id)
+              .single();
+
+            if (!data) return;
+
+            const product = data as unknown as ProductWithCategory;
+
+            if (payload.eventType === "INSERT") {
+              setTableData((prev) => [product as unknown as TData, ...prev]);
+            }
+
+            if (payload.eventType === "UPDATE") {
+              setTableData((prev) =>
+                prev.map((row) =>
+                  row.id === product.id ? (product as unknown as TData) : row,
+                ),
+              );
+            }
+          }
+
+          if (payload.eventType === "DELETE") {
+            setTableData((prev) =>
+              prev.filter((row) => row.id !== (payload.old as TData).id),
+            );
+          }
+        },
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, []);
+
   const table = useReactTable({
-    data,
+    data: tableData,
     columns,
     getCoreRowModel: getCoreRowModel(),
     onSortingChange: setSorting,
@@ -74,12 +137,39 @@ export function DataTable<TData, TValue>({
           </InputGroupAddon>
         </InputGroup>
 
-        <Link href={"/admin/products/add"}>
-          <Button variant={"outline"}>
-            <Plus />
-            Add New Product
-          </Button>
-        </Link>
+        <div className="flex items-center gap-3">
+          {/*  Category Filter */}
+          <Select
+            value={
+              (table.getColumn("category")?.getFilterValue() as string) ?? "all"
+            }
+            onValueChange={(value) => {
+              table
+                .getColumn("category")
+                ?.setFilterValue(value === "all" ? "" : value);
+            }}
+          >
+            <SelectTrigger className="w-45">
+              <SelectValue placeholder="Filter Category" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All Categories</SelectItem>
+              {categories.map((c) => (
+                <SelectItem key={c.id} value={String(c.id)}>
+                  {c.title}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+
+          {/* Add Button */}
+          <Link href={"/admin/products/add"}>
+            <Button variant={"outline"}>
+              <Plus />
+              Add New Product
+            </Button>
+          </Link>
+        </div>
       </div>
       <div className="overflow-hidden rounded-md border">
         <Table>

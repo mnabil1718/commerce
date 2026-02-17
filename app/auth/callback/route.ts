@@ -7,8 +7,17 @@ export async function GET(request: Request) {
 
   if (code) {
     const supabase = await createClient();
-    await supabase.auth.exchangeCodeForSession(code);
+    const { data: { session }, error } = await supabase.auth.exchangeCodeForSession(code);
+
+    if (!error && session) {
+      const role = session.user.user_metadata.role;
+      
+      // Determine destination server-side
+      const destination = role === "admin" ? "/admin/dashboard" : "/dashboard";
+      return NextResponse.redirect(`${origin}${destination}`);
+    }
   }
 
-  return NextResponse.redirect(`${origin}/dashboard`);
+  // Fallback for errors
+  return NextResponse.redirect(`${origin}/login`);
 }

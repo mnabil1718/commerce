@@ -16,7 +16,7 @@ export function AddCart({ product }: { product: Product }) {
 
   useEffect(() => {
     const channel = supabase
-      .channel(`product:${product.id}:add-cart`)
+      .channel(`products:${product.id}:add-cart`)
       .on(
         POSTGRES_CHANGES,
         {

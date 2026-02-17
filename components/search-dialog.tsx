@@ -53,7 +53,7 @@ export function SearchDialog({ children }: { children: React.ReactNode }) {
       } finally {
         setLoading(false);
       }
-    }, 300); // 300ms debounce
+    }, 300);
 
     return () => clearTimeout(delayDebounceFn);
   }, [query]);

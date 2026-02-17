@@ -3,9 +3,10 @@ import { AuthButton } from "./auth-button";
 import { Brand } from "./brand";
 import Link from "next/link";
 import { Cart } from "./cart/cart";
-import { Search } from "lucide-react";
+import { Menu, Search } from "lucide-react";
 import { SearchDialog } from "./search-dialog";
 import { Button } from "./ui/button";
+import { MobileNav } from "./mobile-nav";
 
 export function Navbar() {
   return (
@@ -40,11 +41,19 @@ export function Navbar() {
             </SearchDialog>
           </div>
 
+          <Cart />
+
           <Suspense>
             <AuthButton />
           </Suspense>
 
-          <Cart />
+          <div className="block md:hidden">
+            <MobileNav>
+              <Button variant={"ghost"}>
+                <Menu />
+              </Button>
+            </MobileNav>
+          </div>
         </div>
       </div>
     </nav>

@@ -119,55 +119,6 @@ export function DataTable<TData extends Product, TValue>({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // useEffect(() => {
-  //   const channel = supabase
-  //     .channel("products:admin")
-  //     .on(
-  //       POSTGRES_CHANGES,
-  //       { event: "*", schema: "public", table: "products" },
-  //       async (payload) => {
-  //         if (
-  //           payload.eventType === "INSERT" ||
-  //           payload.eventType === "UPDATE"
-  //         ) {
-  //           // fetch the full row with category
-  //           const { data } = await supabase
-  //             .from("products")
-  //             .select(`*, category:categories (*)`)
-  //             .eq("id", payload.new.id)
-  //             .single();
-
-  //           if (!data) return;
-
-  //           const product = data as unknown as ProductWithCategory;
-
-  //           if (payload.eventType === "INSERT") {
-  //             setTableData((prev) => [product as unknown as TData, ...prev]);
-  //           }
-
-  //           if (payload.eventType === "UPDATE") {
-  //             setTableData((prev) =>
-  //               prev.map((row) =>
-  //                 row.id === product.id ? (product as unknown as TData) : row,
-  //               ),
-  //             );
-  //           }
-  //         }
-
-  //         if (payload.eventType === "DELETE") {
-  //           setTableData((prev) =>
-  //             prev.filter((row) => row.id !== (payload.old as TData).id),
-  //           );
-  //         }
-  //       },
-  //     )
-  //     .subscribe();
-
-  //   return () => {
-  //     supabase.removeChannel(channel);
-  //   };
-  // }, [supabase]);
-
   const table = useReactTable({
     data: tableData,
     columns,

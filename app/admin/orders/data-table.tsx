@@ -19,7 +19,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import React from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { SearchIcon } from "lucide-react";
 import {
   InputGroup,
@@ -33,23 +33,93 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { createClient } from "@/lib/supabase/client";
+import { RealtimeChannel } from "@supabase/supabase-js";
+import { POSTGRES_CHANGES, PRIVATE_ORDERS_CHANNEL } from "@/constants/realtime";
+import { Order } from "@/types/order.type";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
 }
 
-export function DataTable<TData, TValue>({
+export function DataTable<TData extends Order, TValue>({
   columns,
   data,
 }: DataTableProps<TData, TValue>) {
+  const supabase = createClient();
+  const ref = useRef<RealtimeChannel | null>(null);
+  const [tableData, setTableData] = useState<TData[]>(data);
   const [sorting, setSorting] = React.useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
     [],
   );
 
+  const subscription = () => {
+    const ch = supabase.channel(PRIVATE_ORDERS_CHANNEL);
+
+    ch.on(
+      POSTGRES_CHANGES,
+      {
+        event: "*",
+        schema: "public",
+        table: "orders",
+      },
+      async (payload) => {
+        if (payload.eventType === "DELETE") {
+          setTableData((prev) =>
+            prev.filter((row) => row.id !== payload.old.id),
+          );
+          return;
+        }
+
+        const { data: enrichedOrder, error } = await supabase
+          .from("orders")
+          .select(
+            `
+          *,
+          order_user:profiles (*),
+          order_items (*),
+          order_addresses (*)
+        `,
+          )
+          .eq("id", payload.new.id)
+          .single();
+
+        if (error || !enrichedOrder) {
+          return;
+        }
+
+        if (payload.eventType === "INSERT") {
+          setTableData((prev) => [enrichedOrder as unknown as TData, ...prev]);
+        }
+
+        if (payload.eventType === "UPDATE") {
+          setTableData((prev) =>
+            prev.map((row) =>
+              row.id === enrichedOrder.id
+                ? (enrichedOrder as unknown as TData)
+                : row,
+            ),
+          );
+        }
+      },
+    ).subscribe();
+
+    return ch;
+  };
+
+  useEffect(() => {
+    ref.current = subscription();
+
+    return () => {
+      ref.current?.unsubscribe();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const table = useReactTable({
-    data,
+    data: tableData,
     columns,
     getCoreRowModel: getCoreRowModel(),
     onSortingChange: setSorting,

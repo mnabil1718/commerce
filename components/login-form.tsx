@@ -49,14 +49,12 @@ export function LoginForm({
       if (error) throw error;
 
       setAuth(data.user);
-      router.refresh();
 
       if (intent) {
         router.push(intent);
         return;
       }
 
-      // Update this route to redirect to an authenticated route. The user already has an active session.
       if (data.user.user_metadata.role === "admin") {
         router.push("/admin/dashboard");
         return;

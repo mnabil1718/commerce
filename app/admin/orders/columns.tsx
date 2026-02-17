@@ -14,6 +14,7 @@ import { displayRupiah } from "@/utils/price";
 
 import { ColumnDef } from "@tanstack/react-table";
 import { ArrowUpDown } from "lucide-react";
+import Link from "next/link";
 
 export const columns: ColumnDef<AdminOrderWithRelation>[] = [
   {
@@ -32,7 +33,14 @@ export const columns: ColumnDef<AdminOrderWithRelation>[] = [
       );
     },
     cell: ({ row }) => {
-      return <div>#{row.original.order_number}</div>;
+      return (
+        <Link
+          href={`/admin/orders/${row.original.id}`}
+          className="hover:underline"
+        >
+          #{row.original.order_number}
+        </Link>
+      );
     },
   },
 

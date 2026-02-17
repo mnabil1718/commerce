@@ -16,7 +16,7 @@ export async function BestSellerSection() {
     <section id="best-seller" className="col-span-2">
       <div className="flex w-full justify-between">
         <h2 className="text-2xl font-bol tracking-tight font-medium mb-5">
-          Best Sellers
+          Fresh-off Brewing
         </h2>
         <Link href={"/products"}>
           <Button variant={"ghost"} className="group rounded-full">

@@ -18,7 +18,7 @@ export function HeroBestSeller({ product }: { product: Product }) {
             variant={"outline"}
             className="rounded-full flex gap-1 items-center w-fit"
           >
-            <Star size={12} /> Best Seller
+            <Star size={12} /> People&apos;s Favourite
           </Badge>
           <div>
             <h1

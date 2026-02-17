@@ -8,6 +8,7 @@ import { getSingleLatestProduct } from "@/service/product.service";
 import { Product } from "@/types/product.type";
 
 import { HeroBestSeller } from "./hero-best-seller";
+import Link from "next/link";
 
 async function getSingleBestSellerProduct(): Promise<Product> {
   const { data } = await getSingleLatestProduct();
@@ -30,7 +31,7 @@ export async function Hero() {
             className="col-span-2 w-full object-cover overflow-hidden"
           />
           <div className="bg-primary flex-1 flex flex-col items-start p-7">
-            <div className="space-y-3 mb-7">
+            <div className="space-y-3 mb-7 flex-1">
               <h1 className="text-3xl tracking-tight font-bold text-primary-foreground">
                 Explore Our Coffee Collections
               </h1>
@@ -40,10 +41,12 @@ export async function Hero() {
               </p>
             </div>
 
-            <Button className="mt-auto rounded-full bg-primary-foreground text-foreground hover:bg-primary-foreground/80 font-semibold group">
-              Explore
-              <ArrowRight className="group-hover:translate-x-1 transition-transform duration-200" />
-            </Button>
+            <Link href={`/products?category=51`}>
+              <Button className="mt-auto rounded-full bg-primary-foreground text-foreground hover:bg-primary-foreground/80 font-semibold group">
+                Explore
+                <ArrowRight className="group-hover:translate-x-1 transition-transform duration-200" />
+              </Button>
+            </Link>
           </div>
         </CardContent>
       </Card>
@@ -57,7 +60,7 @@ export async function Hero() {
             className="col-span-2 w-full object-cover overflow-hidden"
           />
           <div className="bg-secondary flex-1 flex flex-col items-start p-7">
-            <div className="space-y-3 mb-7">
+            <div className="space-y-3 mb-7 flex-1">
               <h1 className="text-3xl tracking-tight font-bold text-secondary-foreground">
                 Ice cream & Desserts
               </h1>
@@ -66,10 +69,12 @@ export async function Hero() {
               </p>
             </div>
 
-            <Button className="mt-auto rounded-full bg-secondary-foreground text-foreground dark:text-background hover:bg-secondary-foreground/80 font-semibold group">
-              Explore
-              <ArrowRight className="group-hover:translate-x-1 transition-transform duration-200" />
-            </Button>
+            <Link href={`/products?category=54`}>
+              <Button className="mt-auto rounded-full bg-secondary-foreground text-foreground dark:text-background hover:bg-secondary-foreground/80 font-semibold group">
+                Explore
+                <ArrowRight className="group-hover:translate-x-1 transition-transform duration-200" />
+              </Button>
+            </Link>
           </div>
         </CardContent>
       </Card>

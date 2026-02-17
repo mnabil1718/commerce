@@ -44,7 +44,14 @@ export function AvatarDropdown({ user }: { user: JwtPayload }) {
       <DropdownMenuContent className="w-32">
         <DropdownMenuGroup>
           <DropdownMenuItem asChild>
-            <Link href={"/dashboard"} className="flex items-center gap-2">
+            <Link
+              href={
+                user.user_metadata?.role === "admin"
+                  ? "/admin/dashboard"
+                  : "/dashboard"
+              }
+              className="flex items-center gap-2"
+            >
               <Gauge /> Dashboard
             </Link>
           </DropdownMenuItem>

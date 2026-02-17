@@ -1,6 +1,6 @@
 import { Crumb, PrivateNavbar } from "@/components/private/private-navbar";
 import { Card, CardContent } from "@/components/ui/card";
-import { createServiceRoleClient } from "@/lib/supabase/service-role";
+import { createClient } from "@/lib/supabase/server";
 import { displayRupiah } from "@/utils/price";
 import { ChartLine, Receipt, Star } from "lucide-react";
 
@@ -12,7 +12,7 @@ const crumbs: Crumb[] = [
 ];
 
 export default async function AdminDashboardPage() {
-  const supabase = await createServiceRoleClient();
+  const supabase = await createClient();
 
   // Query Total Revenue (Sum of total_amount where payment is 'paid')
   const { data: revenueData } = await supabase
@@ -53,7 +53,7 @@ export default async function AdminDashboardPage() {
         <header className="col-span-3 flex flex-col gap-2 items-start">
           <h1 className="font-bold text-2xl mb-4">Admin Dashboard</h1>
         </header>
-        <Card className="col-span-3 md:col-span-2 lg:col-span-1">
+        <Card className="col-span-3 lg:col-span-1">
           <CardContent className="flex flex-wrap justify-between gap-2">
             <div className="h-full">
               <h2 className="font-medium text-lg text-muted-foreground">
@@ -69,7 +69,7 @@ export default async function AdminDashboardPage() {
           </CardContent>
         </Card>
 
-        <Card className="col-span-3 md:col-span-2 lg:col-span-1">
+        <Card className="col-span-3 lg:col-span-1">
           <CardContent className="flex flex-wrap justify-between gap-2">
             <div className="h-full">
               <h2 className="font-medium text-lg text-muted-foreground">
@@ -85,18 +85,18 @@ export default async function AdminDashboardPage() {
           </CardContent>
         </Card>
 
-        <Card className="col-span-3 md:col-span-2 lg:col-span-1">
-          <CardContent className="flex flex-wrap justify-between gap-2">
-            <div className="h-full">
+        <Card className="col-span-3 lg:col-span-1">
+          <CardContent className="flex justify-between gap-2">
+            <div className="shrink">
               <h2 className="font-medium text-lg text-muted-foreground">
                 Top Selling
               </h2>
-              <span className="font-medium tracking-tight text-xl truncate line-clamp-1">
+              <span className="font-medium tracking-tight min-w-0 text-2xl line-clamp-1">
                 {bestSeller}
               </span>
             </div>
             <div className="flex-none w-16 aspect-square bg-muted/50 rounded-lg flex flex-col items-center justify-center">
-              <Star size={32} />
+              <Receipt size={32} />
             </div>
           </CardContent>
         </Card>

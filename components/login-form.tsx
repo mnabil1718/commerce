@@ -81,7 +81,7 @@ export function LoginForm({
     <div className={cn("flex flex-col gap-6", className)} {...props}>
       <Card>
         <CardHeader>
-          <div className="w-full text-center mb-7">
+          <div className="w-full flex justify-center mb-7">
             <Brand />
           </div>
           <CardTitle className="text-2xl">Login</CardTitle>
@@ -126,18 +126,18 @@ export function LoginForm({
                 {isLoading ? "Logging in..." : "Login"}
               </Button>
             </div>
-            <div className="mt-4 text-center text-sm">
-              Don&apos;t have an account?{" "}
-              <a
-                onClick={redirectSignup}
-                className="underline underline-offset-4 cursor-pointer"
-              >
-                Sign up
-              </a>
-            </div>
           </form>
           <Or />
           <GoogleSignInForm />
+          <div className="mt-4 text-center text-sm">
+            Don&apos;t have an account?{" "}
+            <a
+              onClick={redirectSignup}
+              className="underline underline-offset-4 cursor-pointer"
+            >
+              Sign up
+            </a>
+          </div>
         </CardContent>
       </Card>
     </div>

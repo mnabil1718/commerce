@@ -3,7 +3,7 @@ import { MyOrderList } from "@/components/order/my-order-list";
 
 import { createClient } from "@/lib/supabase/server";
 import { getOrdersWithRelation } from "@/service/order.service";
-import { getUserFavoriteAsServiceRole } from "@/service/product.service";
+import { getUserFavorite } from "@/service/product.service";
 import { OrderWithRelation } from "@/types/order.type";
 
 async function getUsersOrders(limit?: number): Promise<OrderWithRelation[]> {
@@ -20,7 +20,7 @@ async function getFavourite() {
 
   if (error) throw error;
 
-  return getUserFavoriteAsServiceRole(user?.id || "0");
+  return getUserFavorite(user?.id || "0");
 }
 
 export default async function DashboardPage() {

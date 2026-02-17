@@ -218,3 +218,15 @@ export async function getUserFavoriteAsServiceRole(userId: string): Promise<Prod
   return data?.[0];
 }
 
+export async function getUserFavorite(userId: string): Promise<Product | undefined> {
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .rpc('get_most_ordered_product', { 
+      target_user_id: userId 
+    });
+
+  if (error) throw error;
+
+  return data?.[0];
+}
+

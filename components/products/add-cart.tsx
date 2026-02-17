@@ -5,11 +5,15 @@ import { Product } from "@/types/product.type";
 import useStore from "@/hooks/use-store";
 import { Quantity } from "../quantity";
 import { Button } from "../ui/button";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export function AddCart({ p }: { p: Product }) {
   const store = useStore(useCartStore, (state) => state);
   const [q, setQty] = useState<number>(p.stock > 0 ? 1 : 0);
+
+  useEffect(() => {
+    if (p.stock === 0) setQty(0);
+  }, [p]);
 
   if (!store) return null;
 

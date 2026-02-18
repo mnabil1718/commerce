@@ -53,6 +53,10 @@ export function ProductCatelogGrid({ products }: { products: Product[] }) {
   };
 
   useEffect(() => {
+    setP(products);
+  }, [products]);
+
+  useEffect(() => {
     ref.current = subscription();
 
     return () => {

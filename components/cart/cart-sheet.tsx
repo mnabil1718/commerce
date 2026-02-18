@@ -47,7 +47,7 @@ export function CartSheet({ children }: { children: React.ReactNode }) {
           <SheetDescription></SheetDescription>
         </SheetHeader>
 
-        <ul className="min-h-75 flex-1 flex flex-col items-stretch gap-3">
+        <ul className="min-h-75 flex-1 flex flex-col items-stretch overflow-y-auto no-scrollbar gap-3">
           {store.items.length === 0 && (
             <div className="flex-1 flex flex-col gap-5 items-center justify-center text-center text-muted-foreground">
               <EmptyCoffee />

@@ -42,18 +42,18 @@ A clean, "Bento-box" inspired dashboard providing at-a-glance metrics:
 
 ### User Experience
 
-> [INSERT_SCREENSHOT: Homepage and Product Grid]
-> _A clean, minimalist UI focused on the product-first experience._
+<img width="1094" height="952" alt="Screenshot from 2026-02-18 11-42-03" src="https://github.com/user-attachments/assets/9b493a5f-5e22-4ca5-9d81-8cc090a35b2c" />
+<img width="1094" height="952" alt="Screenshot from 2026-02-18 11-42-34" src="https://github.com/user-attachments/assets/b3d16209-b631-4af6-8027-88877eeb75ac" />
+> _Home & Shop Catalog._
+
 
 ### Admin Dashboard
 
-> [INSERT_SCREENSHOT: Admin Dashboard Bento Layout]
+
+<img width="1285" height="404" alt="Screenshot from 2026-02-18 11-43-32" src="https://github.com/user-attachments/assets/f12b3e76-f44d-4417-a834-81824158ff15" />
+<img width="1044" height="694" alt="Screenshot from 2026-02-18 11-47-35" src="https://github.com/user-attachments/assets/b8c3a3c6-8cdf-49b3-a8ed-729322143448" />
 > _Real-time metrics and order management interface._
 
-### Inventory Management
-
-> [INSERT_SCREENSHOT: Inventory Table with Stock Alerts]
-> _Granular control over products and real-time stock status._
 
 ---
 

@@ -41,7 +41,7 @@ export function CartSheet({ children }: { children: React.ReactNode }) {
     <Sheet>
       <SheetTrigger asChild>{children}</SheetTrigger>
 
-      <SheetContent className="w-full sm:max-w-[30vw] p-5 rounded-tl-2xl rounded-bl-2xl flex flex-col">
+      <SheetContent className="w-full sm:max-w-[50vw] p-5 rounded-tl-2xl rounded-bl-2xl flex flex-col">
         <SheetHeader>
           <SheetTitle>Review Your Picks</SheetTitle>
           <SheetDescription></SheetDescription>
